@@ -10,14 +10,12 @@ import Dependencies
 import Foundation
 import Languages
 import URLRouting
-import MemberwiseInit
 import MacroCodableKit
 
 public enum Route: Codable, Hashable, Sendable {
     case subscribe(CoenttbNewsletter.Route.Subscribe)
     case unsubscribe
 }
-
 
 extension CoenttbNewsletter.Route {
     public enum Subscribe: Codable, Hashable, Sendable {
@@ -27,16 +25,21 @@ extension CoenttbNewsletter.Route {
 }
 
 extension CoenttbNewsletter.Route.Subscribe {
-    @MemberwiseInit(.public)
     @Codable
     public struct Verify: Hashable, Sendable {
        @CodingKey("token")
-        @Init(default: "")
         public let token: String
         
        @CodingKey("email")
-        @Init(default: "")
         public let email: String
+        
+        public init(
+            token: String = "",
+            email: String = ""
+        ) {
+            self.token = token
+            self.email = email
+        }
     }
 }
 

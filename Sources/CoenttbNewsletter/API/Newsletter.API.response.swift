@@ -11,7 +11,6 @@ import Fluent
 import Foundation
 import Languages
 import Vapor
-import Mailgun
 import RateLimiter
 
 

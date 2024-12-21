@@ -5,11 +5,9 @@
 //  Created by Coen ten Thije Boonkkamp on 07/10/2024.
 //
 
-import CoenttbWebDependencies
-import EmailAddress
-import Foundation
-import CoenttbWebHTML
+import CoenttbWeb
 import Mailgun
+import DependenciesMacros
 
 @DependencyClient
 public struct Client: @unchecked Sendable {

@@ -7,11 +7,11 @@
 
 import EmailAddress
 import Foundation
-import Mailgun
 import CoenttbWebHTML
 import Fluent
 import CoenttbVapor
 import CoenttbNewsletter
+import Mailgun
 
 extension CoenttbNewsletter.Client {
     public static func live(

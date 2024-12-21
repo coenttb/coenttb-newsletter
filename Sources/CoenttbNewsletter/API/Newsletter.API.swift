@@ -10,7 +10,6 @@ import Dependencies
 import EmailAddress
 import Foundation
 import Languages
-import MemberwiseInit
 import URLRouting
 import MacroCodableKit
 import UrlFormCoding
@@ -43,12 +42,14 @@ extension CoenttbNewsletter.API {
 }
 
 extension CoenttbNewsletter.API {
-    @MemberwiseInit(.public)
     @Codable
     public struct Unsubscribe: Hashable, Sendable {
-       @CodingKey("email")
-        @Init(default: "")
+        @CodingKey("email")
         public let value: String
+        
+        public init(value: String = "") {
+            self.value = value
+        }
     }
 }
 
@@ -60,24 +61,31 @@ extension CoenttbNewsletter.API {
 }
 
 extension CoenttbNewsletter.API.Subscribe {
-    @MemberwiseInit(.public)
     @Codable
     public struct Request: Hashable, Sendable {
         @CodingKey("email")
-        @Init(default: "")
         public let email: String
+        
+        public init(email: String = "") {
+            self.email = email
+        }
     }
-
-    @MemberwiseInit(.public)
+    
     @Codable
     public struct Verify: Hashable, Sendable {
         @CodingKey("token")
-        @Init(default: "")
         public let token: String
         
         @CodingKey("email")
-        @Init(default: "")
         public let email: String
+        
+        public init(
+            token: String = "",
+            email: String = ""
+        ) {
+            self.token = token
+            self.email = email
+        }
     }
 }
 
@@ -104,7 +112,7 @@ extension CoenttbNewsletter.API.Subscribe {
                     }
                 }
             }
-
+            
         }
     }
 }

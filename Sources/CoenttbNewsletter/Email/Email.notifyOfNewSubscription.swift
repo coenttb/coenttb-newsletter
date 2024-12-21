@@ -8,6 +8,5 @@
 import Dependencies
 import EmailAddress
 import Foundation
-import Mailgun
 import Tagged
 
