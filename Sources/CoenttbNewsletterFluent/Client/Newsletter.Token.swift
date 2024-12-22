@@ -80,7 +80,7 @@ extension Newsletter.Token {
     public enum Migration {
         public struct Create: AsyncMigration {
             
-            public let name: String = "CoenttbNewsletter.Newsletter.Token.Migration.Create"
+            public var name: String = "CoenttbNewsletter.Newsletter.Token.Migration.Create"
             
             public init() {}
             

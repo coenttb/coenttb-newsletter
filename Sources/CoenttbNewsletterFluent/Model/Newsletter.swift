@@ -97,7 +97,7 @@ extension Newsletter {
     public enum Migration {
         public struct Create: AsyncMigration {
             
-            public let name: String = "CoenttbNewsletter.CreateNewsletter"
+            public var name: String = "CoenttbNewsletter.CreateNewsletter"
             
             public init() {}
             
@@ -117,7 +117,7 @@ extension Newsletter {
         
         public struct STEP_1_AddUpdatedAt: AsyncMigration {
             
-            public let name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
+            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
             
             public init() {}
             
@@ -140,7 +140,7 @@ extension Newsletter {
         
         public struct STEP_2_AddEmailVerification: AsyncMigration {
             
-            public let name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
+            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
             
             public init() {}
             
