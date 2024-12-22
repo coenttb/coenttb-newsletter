@@ -1,5 +1,5 @@
 {
-  "originHash" : "1b63712544ca48edc15d3522d060ee39f7d474f6f81f0845dcb11f0a3924a7a6",
+  "originHash" : "99ebf37c3506a352a168b0012863579af2f437421ed713e064e3c5ab8a7d9749",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -43,7 +43,7 @@
       "location" : "https://github.com/coenttb/coenttb-mailgun.git",
       "state" : {
         "branch" : "main",
-        "revision" : "eea9f35c46365ae9249a0d8cc052ed4f87bf708d"
+        "revision" : "480df279b737db4849e30109b8a1a91e8ab4570c"
       }
     },
     {
@@ -61,7 +61,7 @@
       "location" : "https://github.com/coenttb/coenttb-web.git",
       "state" : {
         "branch" : "main",
-        "revision" : "47aaaeece6c7b726c14df21a37fb4662fc5cd182"
+        "revision" : "3dc7ae99b09bb67ea4a465d459c5fe006f9556b4"
       }
     },
     {
@@ -296,6 +296,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "1d6fa6441c9cfd56b9ec55fc7c7c76154f162d94"
+      }
+    },
+    {
+      "identity" : "swift-date",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/coenttb/swift-date",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b13f34f8475e2cbece64a840bb03f65fa6ef681f"
       }
     },
     {
@@ -538,7 +547,7 @@
       "location" : "https://github.com/coenttb/swift-web",
       "state" : {
         "branch" : "main",
-        "revision" : "70a64bc0f81881a02c4f448920a9a1296145c2ca"
+        "revision" : "f559d72afb1a19e8891d8f16eed2e03a67e24e91"
       }
     },
     {

@@ -17,8 +17,8 @@ extension CoenttbNewsletter.Client {
     public static func live(
         database: Fluent.Database,
         logger: Logger,
-        notifyOfNewSubscriptionEmail: (@Sendable (_ address: String) -> Email)?,
-        sendEmail: (@Sendable (Email) async throws -> SendEmailResponse)?,
+        notifyOfNewSubscriptionEmail: (@Sendable (_ address: String) -> Mailgun.Messages.Send.Request)?,
+        sendEmail: (@Sendable (Mailgun.Messages.Send.Request) async throws -> Mailgun.Messages.Send.Response)?,
         sendVerificationEmail: @escaping @Sendable (_ email: String, _ token: String) async throws -> Void,
         verificationTimeout: TimeInterval = 24 * 60 * 60
     ) -> Self {
