@@ -31,15 +31,19 @@ public final class Newsletter: Model, @unchecked Sendable {
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     public var updatedAt: Date?
     
+    @Field(key: FieldKeys.lastEmailMessageId)
+    var lastEmailMessageId: String?
 
     public init() { }
     
     public init(
         id: UUID? = nil,
         email: String,
-        emailVerificationStatus: EmailVerificationStatus = .unverified
+        emailVerificationStatus: EmailVerificationStatus = .unverified,
+        lastEmailMessageId: String? = nil
     ) throws {
         self.id = id
+        self.lastEmailMessageId = lastEmailMessageId
         do {
             if try Bool.isValidEmail(email) {
                 self.email = email
@@ -57,6 +61,7 @@ public final class Newsletter: Model, @unchecked Sendable {
         public static let emailVerificationStatus: FieldKey = "email_verification_status"
         public static let createdAt: FieldKey = "created_at"
         public static let updatedAt: FieldKey = "updated_at"
+        public static let lastEmailMessageId: FieldKey = "last_email_message_id"
     }
 }
 
@@ -157,6 +162,25 @@ extension Newsletter {
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .deleteField(FieldKeys.emailVerificationStatus)
+                    .update()
+            }
+        }
+        
+        public struct STEP_3_AddLastEmailMessageId: AsyncMigration {
+            
+            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
+            
+            public init() {}
+            
+            public func prepare(on database: Database) async throws {
+                try await database.schema(Newsletter.schema)
+                    .field(FieldKeys.lastEmailMessageId, .string)
+                    .update()
+            }
+            
+            public func revert(on database: Database) async throws {
+                try await database.schema(Newsletter.schema)
+                    .deleteField(FieldKeys.lastEmailMessageId)
                     .update()
             }
         }
