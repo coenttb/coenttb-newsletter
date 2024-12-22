@@ -28,7 +28,7 @@ extension CoenttbNewsletter.Client {
         @DependencyEndpoint
         public var request: (EmailAddress) async throws -> Void
         @DependencyEndpoint
-        public var verify: (_ token: String, _ email: String) async throws -> Void
+        public var verify: (_ token: String, _ email: EmailAddress) async throws -> Void
     }
 }
 

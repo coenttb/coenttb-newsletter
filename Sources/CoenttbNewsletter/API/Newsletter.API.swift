@@ -45,11 +45,19 @@ extension CoenttbNewsletter.API {
     @Codable
     public struct Unsubscribe: Hashable, Sendable {
         @CodingKey("email")
-        public let value: String
+        public let email: String
         
-        public init(value: String = "") {
-            self.value = value
+        public init(email: String = "") {
+            self.email = email
         }
+    }
+}
+
+extension CoenttbNewsletter.API.Unsubscribe {
+    public init(
+        email: EmailAddress
+    ){
+        self.email = email.rawValue
     }
 }
 
@@ -70,7 +78,17 @@ extension CoenttbNewsletter.API.Subscribe {
             self.email = email
         }
     }
-    
+}
+
+extension CoenttbNewsletter.API.Subscribe.Request {
+    public init(
+        email: EmailAddress
+    ){
+        self.email = email.rawValue
+    }
+}
+
+extension CoenttbNewsletter.API.Subscribe {
     @Codable
     public struct Verify: Hashable, Sendable {
         @CodingKey("token")
@@ -86,6 +104,16 @@ extension CoenttbNewsletter.API.Subscribe {
             self.token = token
             self.email = email
         }
+    }
+}
+
+extension CoenttbNewsletter.API.Subscribe.Verify {
+    public init(
+        token: String,
+        email: EmailAddress
+    ){
+        self.token = token
+        self.email = email.rawValue
     }
 }
 

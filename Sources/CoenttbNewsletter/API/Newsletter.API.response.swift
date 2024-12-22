@@ -188,7 +188,7 @@ extension CoenttbNewsletter.API {
                         throw Abort(.tooManyRequests, reason: "Too many verification attempts. Please try again later.")
                     }
                     
-                    try await client.subscribe.verify(verify.token, verify.email)
+                    try await client.subscribe.verify(verify.token, .init(verify.email))
                     
                     // Record success
                     await emailLimiter.recordSuccess(.email(verify.email))
@@ -229,8 +229,8 @@ extension CoenttbNewsletter.API {
             }
             
         case .unsubscribe(let emailAddress):
-            logger.info("Received unsubscription request for email: \(emailAddress.value)")
-            try await client.unsubscribe(.init(emailAddress.value))
+            logger.info("Received unsubscription request for email: \(emailAddress.email)")
+            try await client.unsubscribe(.init(emailAddress.email))
             
             let response = Response.json(success: true)
             response.cookies[cookieId] = nil

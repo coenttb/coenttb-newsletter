@@ -43,7 +43,7 @@
       "location" : "https://github.com/coenttb/coenttb-mailgun.git",
       "state" : {
         "branch" : "main",
-        "revision" : "480df279b737db4849e30109b8a1a91e8ab4570c"
+        "revision" : "01b7a9449102da3387c841442de65bc6cb93ff67"
       }
     },
     {
@@ -61,7 +61,7 @@
       "location" : "https://github.com/coenttb/coenttb-web.git",
       "state" : {
         "branch" : "main",
-        "revision" : "3dc7ae99b09bb67ea4a465d459c5fe006f9556b4"
+        "revision" : "fab09609e606a72c3a975dbf99a5e5555472f656"
       }
     },
     {
@@ -142,7 +142,7 @@
       "location" : "https://github.com/coenttb/pointfree-web",
       "state" : {
         "branch" : "main",
-        "revision" : "6fdb3612b3db916e87c04f27628448f56c9f4677"
+        "revision" : "5994fff00e459c2bc4277cfa57ed7a184b3c51ad"
       }
     },
     {
@@ -547,7 +547,7 @@
       "location" : "https://github.com/coenttb/swift-web",
       "state" : {
         "branch" : "main",
-        "revision" : "f559d72afb1a19e8891d8f16eed2e03a67e24e91"
+        "revision" : "90427ceb604bf9a332badf2f8f33af4c4a631f12"
       }
     },
     {

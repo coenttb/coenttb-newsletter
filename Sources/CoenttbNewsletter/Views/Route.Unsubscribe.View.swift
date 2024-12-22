@@ -77,7 +77,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
     public var body: some HTML {
         form {
             VStack {
-                Input.default(CoenttbNewsletter.API.Unsubscribe.CodingKeys.value)
+                Input.default(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email)
                     .type(.email)
                     .value("")
                     .placeholder(
@@ -119,7 +119,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(CoenttbNewsletter.API.Unsubscribe.CodingKeys.value.rawValue)');
+                    const email = formData.get('\(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -128,7 +128,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(CoenttbNewsletter.API.Unsubscribe.CodingKeys.value.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
                         });
 
                         if (!response.ok) {

@@ -17,7 +17,7 @@ extension CoenttbNewsletter.Client {
     public static func live(
         database: Fluent.Database,
         logger: Logger,
-        notifyOfNewSubscriptionEmail: (@Sendable (_ address: String) -> Mailgun.Messages.Send.Request)?,
+        notifyOfNewSubscriptionEmail: (@Sendable (_ email: EmailAddress) -> Mailgun.Messages.Send.Request)?,
         sendEmail: (@Sendable (Mailgun.Messages.Send.Request) async throws -> Mailgun.Messages.Send.Response)?,
         sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Mailgun.Messages.Send.Response,
         verificationTimeout: TimeInterval = 24 * 60 * 60
@@ -63,30 +63,25 @@ extension CoenttbNewsletter.Client {
                             )
                             try await verificationToken.save(on: database)
                             
-                            do {
-                                let response = try await sendVerificationEmail(emailAddress, verificationToken.value)
+                            let response = try await sendVerificationEmail(emailAddress, verificationToken.value)
+                            
+                            if response.message.contains("Queued") {
+                                logger.info("Verification email queued successfully: \(response.id)")
                                 
-                                if response.message.contains("Queued") {
-                                    logger.info("Verification email queued successfully: \(response.id)")
-                                    
-                                    subscription.lastEmailMessageId = response.id
-                                    try await subscription.save(on: database)
-                                } else {
-                                    logger.error("Unexpected response from email service: \(response.message)")
-                                    
-                                    subscription.emailVerificationStatus = .failed
-                                    try await subscription.save(on: database)
-                                    
-                                    try await verificationToken.delete(on: database)
-                                    
-                                    throw MailgunError.httpError(
-                                        statusCode: 500,
-                                        message: "Failed to queue verification email"
-                                    )
-                                }
-                            } catch {
-                                logger.error("Error in newsletter subscription: \(error)")
-                                throw error
+                                subscription.lastEmailMessageId = response.id
+                                try await subscription.save(on: database)
+                            } else {
+                                logger.error("Unexpected response from email service: \(response.message)")
+                                
+                                subscription.emailVerificationStatus = .failed
+                                try await subscription.save(on: database)
+                                
+                                try await verificationToken.delete(on: database)
+                                
+                                throw MailgunError.httpError(
+                                    statusCode: 500,
+                                    message: "Failed to queue verification email"
+                                )
                             }
                         }
                     } catch let error as DatabaseError where error.isConstraintFailure {
@@ -115,7 +110,7 @@ extension CoenttbNewsletter.Client {
                                 throw ValidationError.invalidToken
                             }
                             
-                            guard verificationToken.newsletter.email == email else {
+                            guard verificationToken.newsletter.email == email.rawValue else {
                                 throw ValidationError.invalidInput("Email mismatch")
                             }
                             
