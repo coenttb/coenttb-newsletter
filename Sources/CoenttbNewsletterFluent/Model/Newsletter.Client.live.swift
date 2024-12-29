@@ -12,14 +12,15 @@ import Fluent
 import CoenttbVapor
 import CoenttbNewsletter
 import Mailgun
+import Messages
 
 extension CoenttbNewsletter.Client {
     public static func live(
         database: Fluent.Database,
         logger: Logger,
-        notifyOfNewSubscriptionEmail: (@Sendable (_ email: EmailAddress) -> Mailgun.Messages.Send.Request)?,
-        sendEmail: (@Sendable (Mailgun.Messages.Send.Request) async throws -> Mailgun.Messages.Send.Response)?,
-        sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Mailgun.Messages.Send.Response,
+        notifyOfNewSubscriptionEmail: (@Sendable (_ email: EmailAddress) -> Mailgun.Email)?,
+        sendEmail: (@Sendable (Mailgun.Email) async throws -> Messages.Send.Response)?,
+        sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
         verificationTimeout: TimeInterval = 24 * 60 * 60
     ) -> Self {
         return .init(
@@ -77,11 +78,6 @@ extension CoenttbNewsletter.Client {
                                 try await subscription.save(on: database)
                                 
                                 try await verificationToken.delete(on: database)
-                                
-                                throw MailgunError.httpError(
-                                    statusCode: 500,
-                                    message: "Failed to queue verification email"
-                                )
                             }
                         }
                     } catch let error as DatabaseError where error.isConstraintFailure {
@@ -154,6 +150,8 @@ extension CoenttbNewsletter.Client {
         )
     }
 }
+
+
 
 public enum ValidationError: Error {
     case invalidInput(String)
