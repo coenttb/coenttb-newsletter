@@ -21,7 +21,9 @@ extension CoenttbNewsletter.Client {
         notifyOfNewSubscriptionEmail: (@Sendable (_ email: EmailAddress) -> Mailgun.Email)?,
         sendEmail: (@Sendable (Mailgun.Email) async throws -> Messages.Send.Response)?,
         sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
-        verificationTimeout: TimeInterval = 24 * 60 * 60
+        verificationTimeout: TimeInterval = 24 * 60 * 60,
+        onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in },
+        onUnsubscribed: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in }
     ) -> Self {
         return .init(
             subscribe: .init(
@@ -126,6 +128,8 @@ extension CoenttbNewsletter.Client {
                             }
                             
                             logger.notice("Newsletter subscription verified for: \(email)")
+                            
+                            try await onSuccessfullyVerified(email)
                         }
                     } catch {
                         logger.error("Newsletter verification failed: \(error)")
@@ -141,6 +145,8 @@ extension CoenttbNewsletter.Client {
                             .delete()
                         
                         logger.notice("Newsletter unsubscribed for: \(emailAddress.rawValue)")
+                        
+                        try await onUnsubscribed(emailAddress)
                     }
                 } catch {
                     logger.error("Unsubscribe failed for \(emailAddress.rawValue): \(error)")
