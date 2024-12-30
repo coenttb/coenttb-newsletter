@@ -5,16 +5,16 @@
 //  Created by Coen ten Thije Boonkkamp on 16/10/2024.
 //
 
-import EmailAddress
-import Foundation
-import CoenttbWebHTML
-import Fluent
-import CoenttbVapor
-import CoenttbNewsletter
+import Coenttb_Newsletter
+import Coenttb_Newsletter_Live
+import Coenttb_Web
+import Coenttb_Database
+import Coenttb_Vapor
+import Coenttb_Newsletter
 import Mailgun
 import Messages
 
-extension CoenttbNewsletter.Client {
+extension Coenttb_Newsletter.Client {
     public static func live(
         database: Fluent.Database,
         logger: Logger,

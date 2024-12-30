@@ -5,14 +5,13 @@
 //  Created by Coen ten Thije Boonkkamp on 07/10/2024.
 //
 
-import CoenttbWeb
-import Mailgun
+import Coenttb_Web
 import DependenciesMacros
 
 @DependencyClient
 public struct Client: @unchecked Sendable {
     
-    public var subscribe: CoenttbNewsletter.Client.Subscribe
+    public var subscribe: Coenttb_Newsletter.Client.Subscribe
 
     @DependencyEndpoint
     public var unsubscribe: (EmailAddress) async throws -> Void
@@ -22,7 +21,7 @@ extension Client: TestDependencyKey {
     public static let testValue: Client = .testValue
 }
 
-extension CoenttbNewsletter.Client {
+extension Coenttb_Newsletter.Client {
     @DependencyClient
     public struct Subscribe: @unchecked Sendable {
         @DependencyEndpoint
@@ -32,7 +31,7 @@ extension CoenttbNewsletter.Client {
     }
 }
 
-extension CoenttbNewsletter.Client.Subscribe: TestDependencyKey {
+extension Coenttb_Newsletter.Client.Subscribe: TestDependencyKey {
     public static var testValue: Self {
         .init(
             request: { _ in print("requested subscriptions") },

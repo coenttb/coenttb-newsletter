@@ -4,27 +4,25 @@ import Foundation
 import PackageDescription
 
 extension String {
-    static let coenttbNewsletter: Self = "CoenttbNewsletter"
-    static let coenttbNewsletterFluent: Self = "CoenttbNewsletterFluent"
+    static let coenttbNewsletter: Self = "Coenttb Newsletter"
+    static let coenttbNewsletterLive: Self = "Coenttb Newsletter Live"
+    static let coenttbNewsletterFluent: Self = "Coenttb Newsletter Fluent"
 }
 
 extension Target.Dependency {
     static var coenttbNewsletter: Self { .target(name: .coenttbNewsletter) }
+    static var coenttbNewsletterLive: Self { .target(name: .coenttbNewsletterLive) }
     static var coenttbNewsletterFluent: Self { .target(name: .coenttbNewsletterFluent) }
 }
 
 extension Target.Dependency {
+    static var coenttbWeb: Self { .product(name: "Coenttb Web", package: "coenttb-web") }
+    static var coenttbVapor: Self { .product(name: "Coenttb Vapor", package: "coenttb-server") }
+    static var coenttbDatabase: Self { .product(name: "Coenttb Database", package: "coenttb-server") }
     static var mailgun: Self { .product(name: "Mailgun", package: "coenttb-mailgun") }
-    
-}
-extension Target.Dependency {
-    static var coenttbWeb: Self { .product(name: "CoenttbWeb", package: "coenttb-web") }
-    static var codable: Self { .product(name: "MacroCodableKit", package: "macro-codable-kit") }
-    static var vapor: Self { .product(name: "Vapor", package: "Vapor") }
-    static var fluent: Self { .product(name: "Fluent", package: "fluent") }
-    static var rateLimiter: Self { .product(name: "RateLimiter", package: "coenttb-utils") }
-    static var dependenciesTestSupport: Self { .product(name: "DependenciesTestSupport", package: "swift-dependencies") }
     static var dependenciesMacros: Self { .product(name: "DependenciesMacros", package: "swift-dependencies") }
+    static var dependenciesTestSupport: Self { .product(name: "DependenciesTestSupport", package: "swift-dependencies") }
+    static var rateLimiter: Self { .product(name: "RateLimiter", package: "coenttb-utils") }
 }
 
 let package = Package(
@@ -35,26 +33,31 @@ let package = Package(
     ],
     products: [
         .library(name: .coenttbNewsletter, targets: [.coenttbNewsletter]),
+        .library(name: .coenttbNewsletterLive, targets: [.coenttbNewsletterLive]),
         .library(name: .coenttbNewsletterFluent, targets: [.coenttbNewsletterFluent]),
     ],
     dependencies: [
         .package(url: "https://github.com/coenttb/coenttb-web.git", branch: "main"),
+        .package(url: "https://github.com/coenttb/coenttb-server.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-mailgun.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-utils.git", branch: "main"),
-        .package(url: "https://github.com/coenttb/macro-codable-kit.git", branch: "main"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.102.1"),
-        .package(url: "https://github.com/vapor/fluent.git", from: "4.8.0"),
     ],
     targets: [
         .target(
             name: .coenttbNewsletter,
             dependencies: [
-                .dependenciesMacros,
-                .codable,
                 .coenttbWeb,
-                .vapor,
-                .fluent,
+                .dependenciesMacros,
+            ]
+        ),
+        .target(
+            name: .coenttbNewsletterLive,
+            dependencies: [
+                .coenttbWeb,
+                .coenttbDatabase,
+                .coenttbVapor,
+                .coenttbNewsletter,
                 .rateLimiter,
                 .mailgun,
             ]
@@ -62,11 +65,11 @@ let package = Package(
         .target(
             name: .coenttbNewsletterFluent,
             dependencies: [
-                .codable,
-                .coenttbNewsletter,
                 .coenttbWeb,
-                .fluent,
-                .vapor,
+                .coenttbDatabase,
+                .coenttbVapor,
+                .coenttbNewsletter,
+                .coenttbNewsletterLive,
             ]
         ),
         .testTarget(

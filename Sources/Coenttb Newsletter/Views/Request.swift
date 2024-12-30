@@ -5,12 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 28/08/2024.
 //
 
-import CoenttbWebHTML
-import Dependencies
-import Foundation
-import HTML
-import Languages
-import CoenttbWebTranslations
+import Coenttb_Web
 
 extension Route.Subscribe {
     public struct View: HTML {
@@ -85,7 +80,7 @@ public struct NewsletterSubscriptionForm: HTML {
     public var body: some HTML {
         form {
             VStack {
-                Input.default(CoenttbNewsletter.API.Subscribe.Request.CodingKeys.email)
+                Input.default(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email)
                     .type(.email)
                     .value("")
                     .placeholder(
@@ -126,7 +121,7 @@ public struct NewsletterSubscriptionForm: HTML {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(CoenttbNewsletter.API.Subscribe.Request.CodingKeys.email.rawValue)');
+                    const email = formData.get('\(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -135,7 +130,7 @@ public struct NewsletterSubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(CoenttbNewsletter.API.Subscribe.Request.CodingKeys.email.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email.rawValue): email }).toString()
                         });
 
 

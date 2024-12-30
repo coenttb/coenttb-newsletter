@@ -5,16 +5,13 @@
 //  Created by Coen ten Thije Boonkkamp on 10/09/2024.
 //
 
-import CoenttbWebHTML
-import Dependencies
-import Fluent
-import Foundation
-import Languages
-import Vapor
+import Coenttb_Web
+import Coenttb_Vapor
+import Coenttb_Database
+import Coenttb_Newsletter
 import RateLimiter
 
-
-extension CoenttbNewsletter.API {
+extension Coenttb_Newsletter.API {
     private enum RateLimitKey: Hashable, Sendable {
         case email(String)
         case ip(String)
@@ -37,10 +34,10 @@ extension CoenttbNewsletter.API {
     )
     
     public static func response(
-        client: CoenttbNewsletter.Client,
+        client: Coenttb_Newsletter.Client,
         logger: Logger,
         cookieId: String,
-        newsletter: CoenttbNewsletter.API
+        newsletter: Coenttb_Newsletter.API
     ) async throws -> any AsyncResponseEncodable {
         switch newsletter {
         case .subscribe(let subscribe):

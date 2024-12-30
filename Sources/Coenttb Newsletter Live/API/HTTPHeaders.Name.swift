@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Vapor
+import Coenttb_Vapor
 
 extension HTTPHeaders.Name {
     public static let xRateLimitLimit: Self = "X-RateLimit-Limit"

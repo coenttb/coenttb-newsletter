@@ -5,13 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 05/09/2024.
 //
 
-import CoenttbWebHTML
-//import Date
-import Dependencies
-import Foundation
-import CoenttbHTML
-import Languages
-import CoenttbWebTranslations
+import Coenttb_Web
 
 extension Route.Unsubscribe {
     public struct View: HTML {
@@ -77,7 +71,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
     public var body: some HTML {
         form {
             VStack {
-                Input.default(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email)
+                Input.default(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email)
                     .type(.email)
                     .value("")
                     .placeholder(
@@ -119,7 +113,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email.rawValue)');
+                    const email = formData.get('\(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -128,7 +122,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(CoenttbNewsletter.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
                         });
 
                         if (!response.ok) {

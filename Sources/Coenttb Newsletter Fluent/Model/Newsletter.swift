@@ -5,13 +5,12 @@
 //  Created by Coen ten Thije Boonkkamp on 05/09/2024.
 //
 
+import Coenttb_Newsletter
+import Coenttb_Newsletter_Live
+import Coenttb_Web_Utils
 
-import Dependencies
 @preconcurrency import Fluent
-import Foundation
 @preconcurrency import Vapor
-import CoenttbNewsletter
-import CoenttbWebUtils
 
 public final class Newsletter: Model, @unchecked Sendable {
     public static let schema = "newsletter_subscriptions"
@@ -102,7 +101,7 @@ extension Newsletter {
     public enum Migration {
         public struct Create: AsyncMigration {
             
-            public var name: String = "CoenttbNewsletter.CreateNewsletter"
+            public var name: String = "Coenttb_Newsletter.CreateNewsletter"
             
             public init() {}
             
@@ -122,7 +121,7 @@ extension Newsletter {
         
         public struct STEP_1_AddUpdatedAt: AsyncMigration {
             
-            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
+            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
             
             public init() {}
             
@@ -145,7 +144,7 @@ extension Newsletter {
         
         public struct STEP_2_AddEmailVerification: AsyncMigration {
             
-            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
+            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
             
             public init() {}
             
@@ -168,7 +167,7 @@ extension Newsletter {
         
         public struct STEP_3_AddLastEmailMessageId: AsyncMigration {
             
-            public var name: String = "CoenttbNewsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
+            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
             
             public init() {}
             

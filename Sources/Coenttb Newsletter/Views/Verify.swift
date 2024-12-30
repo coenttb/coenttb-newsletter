@@ -5,11 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 18/12/2024.
 //
 
-import CoenttbWebHTML
-import Dependencies
-import Foundation
-import Languages
-import CoenttbWebTranslations
+import Coenttb_Web
 
 public struct Verify: HTML {
     let verificationAction: URL

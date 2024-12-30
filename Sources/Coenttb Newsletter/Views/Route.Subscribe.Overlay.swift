@@ -5,14 +5,7 @@
 //  Created by Coen ten Thije Boonkkamp on 28/08/2024.
 //
 
-import Foundation
-import CoenttbWebHTML
-//import Date
-import Dependencies
-import Foundation
-import Languages
-import CoenttbWebTranslations
-import CoenttbHTML
+import Coenttb_Web
 
 extension Route.Subscribe {
     public struct Overlay: HTML {
@@ -44,7 +37,7 @@ extension Route.Subscribe {
         
         public var body: some HTML {
             if newsletterSubscribed != true {
-                CoenttbWebHTML.Overlay(id: overlay_id) {
+                Coenttb_Web.Overlay(id: overlay_id) {
                     VStack(spacing: 0.5.rem) {
                         div {
                             div {

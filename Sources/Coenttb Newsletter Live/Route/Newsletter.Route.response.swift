@@ -5,22 +5,19 @@
 //  Created by Coen ten Thije Boonkkamp on 18/12/2024.
 //
 
-import CoenttbMarkdown
-import CoenttbWebHTML
-import Dependencies
-import Foundation
-import Languages
-import CoenttbVapor
+import Coenttb_Newsletter
+import Coenttb_Web
+import Coenttb_Vapor
 
-extension CoenttbNewsletter.Route {
+extension Coenttb_Newsletter.Route {
     public static func response<
         HTMLDoc: HTMLDocument & AsyncResponseEncodable
     >(
-        newsletter: CoenttbNewsletter.Route,
+        newsletter: Coenttb_Newsletter.Route,
         htmlDocument: (any HTML) -> HTMLDoc,
         subscribeCaption: () -> String,
         subscribeAction: () -> URL,
-        verificationAction: (Route.Subscribe.Verify) -> URL,
+        verificationAction: (Coenttb_Newsletter.Route.Subscribe.Verify) -> URL,
         verificationRedirectURL: () -> URL,
         newsletterUnsubscribeAction: () -> URL,
         form_id: () -> String,
@@ -32,7 +29,7 @@ extension CoenttbNewsletter.Route {
             case .request:
                 return htmlDocument (
                     AnyHTML(
-                        CoenttbNewsletter.Route.Subscribe.View(
+                        Coenttb_Newsletter.Route.Subscribe.View(
                             caption: subscribeCaption(),
                             newsletterSubscribeAction: subscribeAction()
                         )
@@ -41,7 +38,7 @@ extension CoenttbNewsletter.Route {
             case .verify(let verify):
                 return htmlDocument (
                     AnyHTML(
-                        CoenttbNewsletter.Verify(
+                        Coenttb_Newsletter.Verify(
                             verificationAction: verificationAction(verify),
                             redirectURL: verificationRedirectURL()
                         )
@@ -52,7 +49,7 @@ extension CoenttbNewsletter.Route {
             return htmlDocument (
                 AnyHTML(
                     VStack {
-                        CoenttbNewsletter.Route.Unsubscribe.View(
+                        Coenttb_Newsletter.Route.Unsubscribe.View(
                             form_id: form_id(),
                             localStorageKey: localStorageKey(),
                             newsletterUnsubscribeAction: newsletterUnsubscribeAction()

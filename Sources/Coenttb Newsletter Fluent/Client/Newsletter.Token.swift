@@ -9,7 +9,8 @@ import Dependencies
 @preconcurrency import Fluent
 import Foundation
 @preconcurrency import Vapor
-import CoenttbNewsletter
+import Coenttb_Newsletter
+import Coenttb_Newsletter_Live
 
 extension Newsletter {
     public final class Token: Model, @unchecked Sendable {
@@ -80,7 +81,7 @@ extension Newsletter.Token {
     public enum Migration {
         public struct Create: AsyncMigration {
             
-            public var name: String = "CoenttbNewsletter.Newsletter.Token.Migration.Create"
+            public var name: String = "Coenttb_Newsletter.Newsletter.Token.Migration.Create"
             
             public init() {}
             
