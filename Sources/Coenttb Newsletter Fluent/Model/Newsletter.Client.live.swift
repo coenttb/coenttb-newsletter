@@ -13,6 +13,7 @@ import Coenttb_Vapor
 import Coenttb_Newsletter
 import Mailgun
 import Messages
+import Coenttb_Fluent
 
 extension Coenttb_Newsletter.Client {
     public static func live(

@@ -17,7 +17,8 @@ extension Target.Dependency {
 
 extension Target.Dependency {
     static var coenttbWeb: Self { .product(name: "Coenttb Web", package: "coenttb-web") }
-    static var coenttbVapor: Self { .product(name: "Coenttb Vapor", package: "coenttb-server") }
+    static var coenttbVapor: Self { .product(name: "Coenttb Vapor", package: "coenttb-server-vapor") }
+    static var coenttbFluent: Self { .product(name: "Coenttb Fluent", package: "coenttb-server-vapor") }
     static var coenttbDatabase: Self { .product(name: "Coenttb Database", package: "coenttb-server") }
     static var mailgun: Self { .product(name: "Mailgun", package: "coenttb-mailgun") }
     static var dependenciesMacros: Self { .product(name: "DependenciesMacros", package: "swift-dependencies") }
@@ -39,6 +40,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/coenttb/coenttb-web.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-server.git", branch: "main"),
+        .package(url: "https://github.com/coenttb/coenttb-server-vapor.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-mailgun.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-utils.git", branch: "main"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
@@ -70,6 +72,7 @@ let package = Package(
                 .coenttbVapor,
                 .coenttbNewsletter,
                 .coenttbNewsletterLive,
+                .coenttbFluent
             ]
         ),
         .testTarget(
