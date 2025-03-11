@@ -8,7 +8,7 @@
 
 import Coenttb_Web
 
-public enum API: Equatable, Sendable {
+public enum API: Codable, Hashable, Sendable {
     case subscribe(Coenttb_Newsletter.API.Subscribe)
     case unsubscribe(Coenttb_Newsletter.API.Unsubscribe)
 }
@@ -58,7 +58,7 @@ extension Coenttb_Newsletter.API.Unsubscribe {
 }
 
 extension Coenttb_Newsletter.API {
-    public enum Subscribe: Equatable, Sendable {
+    public enum Subscribe: Codable, Hashable, Sendable {
         case request(Request)
         case verify(Verification)
     }

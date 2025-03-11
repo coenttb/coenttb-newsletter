@@ -7,7 +7,7 @@
 
 import Coenttb_Web
 
-public enum Route: Equatable, Sendable {
+public enum Route: Codable, Hashable, Sendable {
     case api(API)
     case view(View)
 }
