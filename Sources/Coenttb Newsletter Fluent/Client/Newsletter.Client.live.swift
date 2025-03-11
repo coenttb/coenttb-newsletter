@@ -18,12 +18,13 @@ import Coenttb_Fluent
 extension Coenttb_Newsletter.Client {
     public static func live(
         sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
-        onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in },
-        onUnsubscribed: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in }
+        onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void,
+        onUnsubscribed: @escaping @Sendable (_ email: EmailAddress) async throws -> Void
     ) -> Self {
         @Dependency(\.database) var database
         @Dependency(\.logger) var logger
         @Dependency(\.newsletter.verificationTimeout) var verificationTimeout
+        
         return .init(
             subscribe: .init(
                 request: { emailAddress in
