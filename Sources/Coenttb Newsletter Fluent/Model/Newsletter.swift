@@ -8,6 +8,7 @@
 import Coenttb_Newsletter
 import Coenttb_Newsletter_Live
 import Coenttb_Web_Utils
+import Dependencies
 
 @preconcurrency import Fluent
 @preconcurrency import Vapor
@@ -87,9 +88,10 @@ extension Newsletter {
     public func canGenerateToken(on db: Database) async throws -> Bool {
         guard let id = self.id else { return false }
         
+        @Dependency(\.date) var date
         let recentTokens = try await Newsletter.Token.query(on: db)
             .filter(\.$newsletter.$id == id)
-            .filter(\.$createdAt >= Date().addingTimeInterval(-Newsletter.Token.generationWindow))
+            .filter(\.$createdAt >= date().addingTimeInterval(-Newsletter.Token.generationWindow))
             .count()
 
         return recentTokens < Newsletter.Token.generationLimit

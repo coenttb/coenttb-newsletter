@@ -59,62 +59,12 @@ extension Coenttb_Newsletter.API.Unsubscribe {
 
 extension Coenttb_Newsletter.API {
     public enum Subscribe: Equatable, Sendable {
-        case request(Coenttb_Newsletter.API.Subscribe.Request)
-        case verify(Coenttb_Newsletter.API.Subscribe.Verify)
+        case request(Request)
+        case verify(Verification)
     }
 }
 
-extension Coenttb_Newsletter.API.Subscribe {
-    public struct Request: Codable, Hashable, Sendable {
-        public let email: String
-        
-        public init(email: String = "") {
-            self.email = email
-        }
-        
-        public enum CodingKeys: String, CodingKey {
-            case email
-        }
-    }
-}
 
-extension Coenttb_Newsletter.API.Subscribe.Request {
-    public init(
-        email: EmailAddress
-    ){
-        self.email = email.rawValue
-    }
-}
-
-extension Coenttb_Newsletter.API.Subscribe {
-    public struct Verify: Codable, Hashable, Sendable {
-        public let token: String
-        public let email: String
-        
-        public init(
-            token: String = "",
-            email: String = ""
-        ) {
-            self.token = token
-            self.email = email
-        }
-        
-        public enum CodingKeys: String, CodingKey {
-            case token
-            case email
-        }
-    }
-}
-
-extension Coenttb_Newsletter.API.Subscribe.Verify {
-    public init(
-        token: String,
-        email: EmailAddress
-    ){
-        self.token = token
-        self.email = email.rawValue
-    }
-}
 
 extension Coenttb_Newsletter.API.Subscribe {
     public struct Router: ParserPrinter, Sendable {
@@ -126,15 +76,15 @@ extension Coenttb_Newsletter.API.Subscribe {
                 URLRouting.Route(.case(Coenttb_Newsletter.API.Subscribe.request)) {
                     Method.post
                     Path { "request" }
-                    Body(.form(Coenttb_Newsletter.API.Subscribe.Request.self, decoder: .default))
+                    Body(.form(Request.self, decoder: .default))
                 }
                 URLRouting.Route(.case(Coenttb_Newsletter.API.Subscribe.verify)) {
                     Method.post
                     Path { "verify" }
-                    Parse(.memberwise(Coenttb_Newsletter.API.Subscribe.Verify.init)) {
+                    Parse(.memberwise(Verification.init)) {
                         Query {
-                            Field(Coenttb_Newsletter.API.Subscribe.Verify.CodingKeys.token.rawValue, .string)
-                            Field(Coenttb_Newsletter.API.Subscribe.Verify.CodingKeys.email.rawValue, .string)
+                            Field(Verification.CodingKeys.token.rawValue, .string)
+                            Field(Verification.CodingKeys.email.rawValue, .string)
                         }
                     }
                 }

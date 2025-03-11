@@ -2,39 +2,30 @@
 //  File.swift
 //  coenttb-web
 //
-//  Created by Coen ten Thije Boonkkamp on 28/08/2024.
+//  Created by Coen ten Thije Boonkkamp on 05/09/2024.
 //
 
 import Coenttb_Web
 
-extension Route.Subscribe {
-    public struct View: HTML {
+extension View {
+    public struct Unsubscribe: HTML {
         
-        let form_id: String
-        let caption: String
-        let newsletterSubscribeAction: URL
+        @Dependency(\.newsletter.localStorageKey) var localStorageKey
+        @Dependency(\.newsletter.unsubscribeAction) var unsubscribeAction
+        @Dependency(\.newsletter.unsubscribeFormId) var unsubscribeFormId
         
         public init(
-            form_id: String = UUID().uuidString,
-            caption: String,
-            newsletterSubscribeAction: URL
+            
         ) {
-            self.form_id = form_id
-            self.caption = caption
-            self.newsletterSubscribeAction = newsletterSubscribeAction
+            
         }
         
         public var body: some HTML {
             PageModule(theme: .newsletterSubscription) {
                 VStack {
-                    Paragraph {
-                        HTMLText(caption)
-                    }
-                    .textAlign(.center)
-                    
-                    NewsletterSubscriptionForm(form_id: form_id, newsletterSubscribeAction: newsletterSubscribeAction)
+                    NewsletterUnsubscriptionForm()
                 }
-                .maxWidth(30.rem, media: .desktop)
+                .maxWidth(30.rem)
                 .flexContainer(
                     direction: .column,
                     wrap: .wrap,
@@ -45,7 +36,7 @@ extension Route.Subscribe {
             }
             title: {
                 Header(4) {
-                    String.subscribe_to_my_newsletter.capitalizingFirstLetter()
+                    String.unsubscribe.capitalizingFirstLetter()
                 }
             }
             .flexContainer(
@@ -56,31 +47,22 @@ extension Route.Subscribe {
     }
 }
 
-extension PageModule.Theme {
-    public static var newsletterSubscription: Self {
-        Self(
-            topMargin: 0.rem,
-            bottomMargin: .large,
-            leftRightMargin: .medium,
-            leftRightMarginDesktop: .large,
-            itemAlignment: .center
-        )
-    }
-}
-
-public struct NewsletterSubscriptionForm: HTML {
-    let form_id: String
-    let newsletterSubscribeAction: URL
+public struct NewsletterUnsubscriptionForm: HTML {
     
-    public init(form_id: String = UUID().uuidString, newsletterSubscribeAction: URL) {
-        self.form_id = form_id
-        self.newsletterSubscribeAction = newsletterSubscribeAction
+    @Dependency(\.newsletter.localStorageKey) var localStorageKey
+    @Dependency(\.newsletter.unsubscribeAction) var unsubscribeAction
+    @Dependency(\.newsletter.unsubscribeFormId) var unsubscribeFormId
+
+    public init(
+        
+    ) {
+        
     }
     
     public var body: some HTML {
         form {
             VStack {
-                Input.default(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email)
+                Input.default(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email)
                     .type(.email)
                     .value("")
                     .placeholder(
@@ -91,9 +73,8 @@ public struct NewsletterSubscriptionForm: HTML {
                     Button(
                         tag: button
                     ) {
-                        "\(String.subscribe.capitalizingFirstLetter())"
+                        "\(String.unsubscribe.capitalizingFirstLetter())"
                     }
-                    .color(.secondary)
                     .type(.submit)
                     .display(.inlineBlock)
                 }
@@ -104,24 +85,26 @@ public struct NewsletterSubscriptionForm: HTML {
                 )
                 
                 div()
-                    .id("\(form_id)-message")
+                    .id("\(unsubscribeFormId())-message")
             }
         }
-        .id(form_id)
+        .id(unsubscribeFormId())
         .method(.post)
-        .action(newsletterSubscribeAction.absoluteString)
+//        .action(serverRouter.url(for: .api(.v1(.newsletter(.unsubscribe(.init(value: "")))))).absoluteString)
+        .action(unsubscribeAction().absoluteString)
 
         script {
             """
             document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById("\(form_id)");
+                const form = document.getElementById("\(unsubscribeFormId())");
                 const formContainer = form;
+                const localStorageKey = "\(localStorageKey())";
 
                 form.addEventListener('submit', async function(event) {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email.rawValue)');
+                    const email = formData.get('\(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -130,9 +113,8 @@ public struct NewsletterSubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(Coenttb_Newsletter.API.Subscribe.Request.CodingKeys.email.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
                         });
-
 
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -141,9 +123,11 @@ public struct NewsletterSubscriptionForm: HTML {
                         const data = await response.json();
 
                         if (data.success) {
+                            localStorage.removeItem(localStorageKey);
+
                             formContainer.innerHTML = `\(String(decoding: successSection.render(), as: UTF8.self))`;
                         } else {
-                            throw new Error(data.message || 'Subscription failed');
+                            throw new Error(data.message || 'Unsubscription failed');
                         }
             
                     } catch (error) {
@@ -165,31 +149,13 @@ public struct NewsletterSubscriptionForm: HTML {
     var successSection: some HTML {
         VStack {
             Header(3) {
-                TranslatedString(
-                    dutch: "Controleer je e-mail",
-                    english: "Check your email"
-                )
+                "Successfully unsubscribed"
             }
-            .color(.blue)
+            .color(.red)
             
             Paragraph {
-                TranslatedString(
-                    dutch: "Controleer je inbox voor een verificatie-e-mail. Klik op de link in de e-mail om je inschrijving te voltooien",
-                    english: "Please check your inbox for a verification email. Click the link in the email to complete your subscription"
-                ).period
-                
+                "You have been unsubscribed from our newsletter. We're sorry to see you go!"
             }
-            
-            Paragraph {
-                TranslatedString(
-                    dutch: "Als je de e-mail niet ziet, controleer dan je spam-map",
-                    english: "If you don't see the email, please check your spam folder"
-                ).period
-                
-            }
-            .fontStyle(.body(.small))
-//            .color(HTMLColor.gray)
-            
         }
         .textAlign(.center, media: .desktop)
     }

@@ -17,15 +17,13 @@ import Coenttb_Fluent
 
 extension Coenttb_Newsletter.Client {
     public static func live(
-        database: Fluent.Database,
-        logger: Logger,
-        notifyOfNewSubscriptionEmail: (@Sendable (_ email: EmailAddress) -> Mailgun.Email)?,
-        sendEmail: (@Sendable (Mailgun.Email) async throws -> Messages.Send.Response)?,
         sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
-        verificationTimeout: TimeInterval = 24 * 60 * 60,
         onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in },
         onUnsubscribed: @escaping @Sendable (_ email: EmailAddress) async throws -> Void = { _ in }
     ) -> Self {
+        @Dependency(\.database) var database
+        @Dependency(\.logger) var logger
+        @Dependency(\.newsletter.verificationTimeout) var verificationTimeout
         return .init(
             subscribe: .init(
                 request: { emailAddress in
@@ -61,9 +59,10 @@ extension Coenttb_Newsletter.Client {
                             else { throw ValidationError.tooManyAttempts("Token generation limit exceeded") }
                             
                             // Generate and save token
+                            @Dependency(\.date) var date
                             let verificationToken = try subscription.generateToken(
                                 type: .emailVerification,
-                                validUntil: Date().addingTimeInterval(verificationTimeout)
+                                validUntil: date().addingTimeInterval(verificationTimeout())
                             )
                             try await verificationToken.save(on: database)
                             
@@ -104,7 +103,8 @@ extension Coenttb_Newsletter.Client {
                             }
                             
                             // Validate token
-                            guard verificationToken.validUntil > Date() else {
+                            @Dependency(\.date) var date
+                            guard verificationToken.validUntil > date() else {
                                 try await verificationToken.delete(on: database)
                                 throw ValidationError.invalidToken
                             }
@@ -121,15 +121,11 @@ extension Coenttb_Newsletter.Client {
                             verificationToken.newsletter.emailVerificationStatus = .verified
                             try await verificationToken.newsletter.save(on: database)
                             try await verificationToken.delete(on: database)
-                            
-                            if let sendEmail,
-                               let notifyOfNewSubscriptionEmail {
-                                let emailResponse = try await sendEmail(notifyOfNewSubscriptionEmail(email))
-                                logger.info("Notification sent: \(emailResponse.message)")
-                            }
-                            
+                             
                             logger.notice("Newsletter subscription verified for: \(email)")
-                            
+                        }
+                        @Dependency(\.fireAndForget) var fireAndForget
+                        await fireAndForget {
                             try await onSuccessfullyVerified(email)
                         }
                     } catch {
@@ -157,8 +153,6 @@ extension Coenttb_Newsletter.Client {
         )
     }
 }
-
-
 
 public enum ValidationError: Error {
     case invalidInput(String)

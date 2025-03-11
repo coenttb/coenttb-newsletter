@@ -7,6 +7,7 @@
 
 import Coenttb_Web
 import DependenciesMacros
+import RateLimiter
 
 @DependencyClient
 public struct Client: @unchecked Sendable {
@@ -30,6 +31,7 @@ extension Coenttb_Newsletter.Client {
         public var verify: (_ token: String, _ email: EmailAddress) async throws -> Void
     }
 }
+
 
 extension Coenttb_Newsletter.Client.Subscribe: TestDependencyKey {
     public static var testValue: Self {

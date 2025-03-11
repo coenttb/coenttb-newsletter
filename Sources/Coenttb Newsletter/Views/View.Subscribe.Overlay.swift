@@ -7,37 +7,32 @@
 
 import Coenttb_Web
 
-extension Route.Subscribe {
+extension View.Subscribe {
     public struct Overlay: HTML {
-        let overlay_id:String
-        let saveToLocalstorage: Bool
         let image: Image
         let title: String
         let caption: String
         let newsletterSubscribed: Bool
-        let newsletterSubscribeAction: URL
         
         public init(
-            overlay_id: String = "tenthijeboonkkampnewslettersubscriptionoverlay",
-            saveToLocalstorage: Bool = true,
             image: Image,
             title: String,
             caption: String,
-            newsletterSubscribed: Bool,
-            newsletterSubscribeAction: URL
+            newsletterSubscribed: Bool
         ) {
-            self.overlay_id = overlay_id
-            self.saveToLocalstorage = saveToLocalstorage
             self.image = image
             self.title = title
             self.caption = caption
             self.newsletterSubscribed = newsletterSubscribed
-            self.newsletterSubscribeAction = newsletterSubscribeAction
         }
+        
+        @Dependency(\.newsletter.subscribeOverlayId) var subscribeOverlayId
+        @Dependency(\.newsletter.saveToLocalstorage) var saveToLocalstorage
+        @Dependency(\.newsletter.subscribeAction) var subscribeAction
         
         public var body: some HTML {
             if newsletterSubscribed != true {
-                Coenttb_Web.Overlay(id: overlay_id) {
+                Coenttb_Web.Overlay(id: subscribeOverlayId()) {
                     VStack(spacing: 0.5.rem) {
                         div {
                             div {
@@ -67,7 +62,7 @@ extension Route.Subscribe {
                         }
                         
                         NewsletterSubscriptionForm(
-                            newsletterSubscribeAction: newsletterSubscribeAction
+                            subscribeAction: subscribeAction()
                         )
                         
                         div{
@@ -85,7 +80,7 @@ extension Route.Subscribe {
                     """
                     function continueReading() {
                         // dismissOverlay();
-                        hideOverlay_\(String.sanitizeForJavaScript(overlay_id))(\(saveToLocalstorage))
+                        hideOverlay_\(String.sanitizeForJavaScript(subscribeOverlayId()))(\(saveToLocalstorage))
                         console.log("test")
                     }
                     

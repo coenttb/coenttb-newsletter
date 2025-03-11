@@ -12,33 +12,15 @@ import Coenttb_Newsletter
 import RateLimiter
 
 extension Coenttb_Newsletter.API {
-    private enum RateLimitKey: Hashable, Sendable {
-        case email(String)
-        case ip(String)
-    }
-    
-    private static let emailLimiter = RateLimiter<RateLimitKey>(
-        windows: [
-            .minutes(5, maxAttempts: 3),
-            .hours(24, maxAttempts: 10)
-        ],
-        backoffMultiplier: 2.0
-    )
-    
-    private static let ipLimiter = RateLimiter<RateLimitKey>(
-        windows: [
-            .minutes(5, maxAttempts: 5),
-            .hours(24, maxAttempts: 20)
-        ],
-        backoffMultiplier: 2.0
-    )
-    
     public static func response(
-        client: Coenttb_Newsletter.Client,
-        logger: Logger,
-        cookieId: String,
         newsletter: Coenttb_Newsletter.API
     ) async throws -> any AsyncResponseEncodable {
+        @Dependency(\.logger) var logger
+        @Dependency(\.newsletter.cookieId) var cookieId
+        @Dependency(\.newsletter.client) var client
+        @Dependency(\.newsletter.emailLimiter) var emailLimiter
+        @Dependency(\.newsletter.ipLimiter) var ipLimiter
+        
         switch newsletter {
         case .subscribe(let subscribe):
             switch subscribe {
@@ -140,7 +122,7 @@ extension Coenttb_Newsletter.API {
 
                     @Dependency(\.envVars.appEnv) var appEnv
 
-                    response.cookies[cookieId] = HTTPCookies.Value(
+                    response.cookies[cookieId()] = HTTPCookies.Value(
                         string: "true",
                         expires: .distantFuture,
                         maxAge: nil,
@@ -203,7 +185,7 @@ extension Coenttb_Newsletter.API {
                     )
                     
                     let response = Response.json(success: true, message: "Email successfully verified")
-                    response.cookies[cookieId] = cookieValue
+                    response.cookies[cookieId()] = cookieValue
                     return response
                     
                 }
@@ -230,7 +212,7 @@ extension Coenttb_Newsletter.API {
             try await client.unsubscribe(.init(emailAddress.email))
             
             let response = Response.json(success: true)
-            response.cookies[cookieId] = nil
+            response.cookies[cookieId()] = nil
             return response
             
         }

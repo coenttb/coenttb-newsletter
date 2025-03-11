@@ -14,7 +14,7 @@ import Coenttb_Newsletter_Live
 
 extension Newsletter {
     public final class Token: Model, @unchecked Sendable {
-        public static let schema = "newsletter_verification_tokens"
+        public static var schema:String { "newsletter_verification_tokens" }
         
         @ID(key: .id)
         public var id: UUID?
@@ -41,14 +41,17 @@ extension Newsletter {
             type: TokenType,
             validUntil: Date? = nil
         ) throws {
+            @Dependency(\.date) var date
+            @Dependency(\.newsletter.verificationTimeout) var verificationTimeout
             self.value = [UInt8].random(count: 32).base64
             self.type = type
-            self.validUntil = validUntil ?? Date().addingTimeInterval(24 * 60 * 60)
+            self.validUntil = validUntil ?? date().addingTimeInterval(verificationTimeout())
             self.$newsletter.id = try newsletter.requireID()
         }
         
         public var isValid: Bool {
-            validUntil > Date()
+            @Dependency(\.date) var date
+            return validUntil > date()
         }
         
         enum FieldKeys {
