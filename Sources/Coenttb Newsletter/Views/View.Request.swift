@@ -88,7 +88,7 @@ public struct NewsletterSubscriptionForm: HTML {
                     ) {
                         "\(String.subscribe.capitalizingFirstLetter())"
                     }
-                    .color(.secondary)
+                    .color(.text.secondary)
                     .type(.submit)
                     .display(.inlineBlock)
                 }

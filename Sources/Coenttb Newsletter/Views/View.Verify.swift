@@ -140,7 +140,7 @@ extension View.Verify {
                             english: "Click here if you are not redirected automatically"
                         )
                     }
-                    .linkColor(.primary)
+                    .linkColor(.text.primary)
                 }
                 .textAlign(.center)
                 .alignItems(.center)
