@@ -12,7 +12,7 @@ import Coenttb_Vapor
 extension Coenttb_Newsletter.Route {
     public static func response(
         newsletter: Coenttb_Newsletter.Route,
-        htmlDocument: (any HTML) -> any (HTMLDocument & AsyncResponseEncodable)
+        htmlDocument: (any HTML) -> any (HTMLDocumentProtocol & AsyncResponseEncodable)
     ) async throws -> any AsyncResponseEncodable {
         switch newsletter {
         case .api(let api):

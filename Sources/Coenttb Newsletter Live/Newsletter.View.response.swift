@@ -12,7 +12,7 @@ import Coenttb_Vapor
 extension Coenttb_Newsletter.View {
     public static func response(
         newsletter: Coenttb_Newsletter.View,
-        htmlDocument: (any HTML) -> any (HTMLDocument & AsyncResponseEncodable)
+        htmlDocument: (any HTML) -> any (HTMLDocumentProtocol & AsyncResponseEncodable)
     ) async throws -> any AsyncResponseEncodable {
         switch newsletter {
         case .subscribe(let subscribe):
