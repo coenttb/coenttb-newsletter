@@ -36,27 +36,34 @@ extension Email {
                             )
                         }
 
-                        Paragraph {
+                        CoenttbHTML.Paragraph {
                             TranslatedString(
                                 dutch: "Bevestig alsjeblieft dat dit je e-mailadres is.",
                                 english: "Please verify that this is your email address."
                             )
                         }
                         .padding(bottom: .extraSmall)
-                        .fontSize(.body)
+                        .font(.body)
 
-                        Button(
-                            tag: a,
-                            background: primaryColor
-                        ) {
+                        
+                        Link(href: .init(verificationUrl.absoluteString)) {
                             TranslatedString(
                                 dutch: "Verifieer e-mailadres",
                                 english: "Verify email address"
                             )
                         }
                         .color(.text.primary.reverse())
-                        .href(verificationUrl.absoluteString)
-                        .padding(bottom: Length.medium)
+                        .padding(bottom: .medium)
+                        
+//                        Button(
+//                            tag: a,
+//                            background: primaryColor
+//                        ) {
+//                            
+//                        }
+//                        
+//                        .href(verificationUrl.absoluteString)
+//                        
 
                         Paragraph(.small) {
 
@@ -77,7 +84,7 @@ extension Email {
                                 english: "For help, contact us at \(supportEmail)."
                             )
                         }
-                        .fontSize(.footnote)
+                        .font(.footnote)
                         .color(.text.secondary)
                     }
                     .padding(vertical: .small, horizontal: .medium)

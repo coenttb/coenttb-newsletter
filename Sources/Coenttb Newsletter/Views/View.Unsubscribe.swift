@@ -168,7 +168,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
 //            }
 //            .color(.red)
 //            
-//            Paragraph {
+//            CoenttbHTML.Paragraph {
 //                "You have been unsubscribed from our newsletter. We're sorry to see you go!"
 //            }
 //        }

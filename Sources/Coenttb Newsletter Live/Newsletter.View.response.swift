@@ -39,7 +39,7 @@ extension Coenttb_Newsletter.View {
                     VStack {
                         View.Unsubscribe()
                     }
-                        .margin(vertical: 3.rem)
+                        .margin(vertical: .rem(3))
                 )
             )
         }

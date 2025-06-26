@@ -118,7 +118,7 @@ extension View.Verify {
             HTMLEmpty()
 //            PageModule(theme: .login) {
 //                VStack(alignment: .center) {
-//                    Paragraph {
+//                    CoenttbHTML.Paragraph {
 //                        TranslatedString(
 //                            dutch: "Uw email is succesvol geverifieerd!",
 //                            english: "Your email has been successfully verified!"
@@ -127,7 +127,7 @@ extension View.Verify {
 //                    .textAlign(.center)
 //                    .marginBottom(.rem(1))
 //                    
-//                    Paragraph {
+//                    CoenttbHTML.Paragraph {
 //                        TranslatedString(
 //                            dutch: "U wordt over 5 seconden doorgestuurd naar de inlogpagina.",
 //                            english: "You will be redirected to the login page in 5 seconds."
