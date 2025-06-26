@@ -10,7 +10,6 @@ import Coenttb_Web
 extension View.Subscribe {
     public struct Request: HTML {
         
-        
         public init(
         ) {
             
@@ -22,20 +21,20 @@ extension View.Subscribe {
         public var body: some HTML {
             PageModule(theme: .newsletterSubscription) {
                 VStack {
-                    Paragraph {
+                    CoenttbHTML.Paragraph {
                         HTMLText(caption())
                     }
                     .textAlign(.center)
                     
                     NewsletterSubscriptionForm(form_id: subscribeFormId(), subscribeAction: subscribeAction())
                 }
-                .maxWidth(30.rem, media: .desktop)
+                .maxWidth(.rem(30), media: .desktop)
                 .flexContainer(
                     direction: .column,
                     wrap: .wrap,
                     justification: .center,
                     itemAlignment: .center,
-                    rowGap: .length(0.5.rem)
+                    rowGap: .rem(0.5)
                 )
             }
             title: {
@@ -54,10 +53,10 @@ extension View.Subscribe {
 extension PageModule.Theme {
     public static var newsletterSubscription: Self {
         Self(
-            topMargin: 0.rem,
-            bottomMargin: .large,
-            leftRightMargin: .medium,
-            leftRightMarginDesktop: .large,
+            topMargin: .rem(0),
+            bottomMargin: .length(.large),
+            leftRightMargin: .length(.medium),
+            leftRightMarginDesktop: .length(.large),
             itemAlignment: .center
         )
     }
@@ -67,29 +66,44 @@ public struct NewsletterSubscriptionForm: HTML {
     let form_id: String
     let subscribeAction: URL
     
-    public init(form_id: String = UUID().uuidString, subscribeAction: URL) {
+    public init(
+        form_id: String = UUID().uuidString,
+        subscribeAction: URL
+    ) {
         self.form_id = form_id
         self.subscribeAction = subscribeAction
     }
     
     public var body: some HTML {
-        form {
+        form(
+            action: .init(subscribeAction.absoluteString),
+            method: .post
+        ) {
             VStack {
-                Input.default(Request.CodingKeys.email)
-                    .type(.email)
-                    .value("")
-                    .placeholder(
-                        "\(String.type_your_email.capitalizingFirstLetter())..."
-                    )
 
+                Input(
+                    codingKey: Request.CodingKeys.email,
+                    type: .email(
+                        .init(
+                            value: "",
+                            maxlength: nil,
+                            minlength: nil,
+                            required: nil,
+                            multiple: nil,
+                            pattern: nil,
+                            placeholder: .init("\(String.type_your_email.capitalizingFirstLetter())..."),
+                            readonly: nil,
+                            size: nil
+                        )
+                    )
+                )
                 div {
                     Button(
-                        tag: button
+                        type: .submit
                     ) {
                         "\(String.subscribe.capitalizingFirstLetter())"
                     }
                     .color(.text.secondary)
-                    .type(.submit)
                     .display(.inlineBlock)
                 }
                 .flexContainer(
@@ -97,14 +111,12 @@ public struct NewsletterSubscriptionForm: HTML {
                     itemAlignment: .center,
                     media: .desktop
                 )
-                
-                div()
+                                
+                div() {}
                     .id("\(form_id)-message")
             }
         }
         .id(form_id)
-        .method(.post)
-        .action(subscribeAction.absoluteString)
 
         script {
             """
@@ -167,24 +179,21 @@ public struct NewsletterSubscriptionForm: HTML {
             }
             .color(.blue)
             
-            Paragraph {
+            CoenttbHTML.Paragraph {
                 TranslatedString(
                     dutch: "Controleer je inbox voor een verificatie-e-mail. Klik op de link in de e-mail om je inschrijving te voltooien",
                     english: "Please check your inbox for a verification email. Click the link in the email to complete your subscription"
                 ).period
-                
             }
             
-            Paragraph {
+            CoenttbHTML.Paragraph {
                 TranslatedString(
                     dutch: "Als je de e-mail niet ziet, controleer dan je spam-map",
                     english: "If you don't see the email, please check your spam folder"
                 ).period
-                
             }
-            .fontStyle(.body(.small))
-//            .color(HTMLColor.gray)
-            
+            .font(.body(.small))
+            .color(.gray100)
         }
         .textAlign(.center, media: .desktop)
     }

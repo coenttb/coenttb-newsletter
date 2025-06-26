@@ -9,17 +9,20 @@ import Coenttb_Web
 
 extension View.Subscribe {
     public struct Overlay: HTML {
-        let image: Image
+        let image: HTMLElementTypes.Image
         let title: String
         let caption: String
         let newsletterSubscribed: Bool
+        let buttonId = UUID()
         
         public init(
-            image: Image,
+            image: HTMLElementTypes.Image,
             title: String,
             caption: String,
             newsletterSubscribed: Bool
         ) {
+            var image = image
+            image.loading = .lazy
             self.image = image
             self.title = title
             self.caption = caption
@@ -37,19 +40,21 @@ extension View.Subscribe {
                         div {
                             div {
                                 image
-                                    .loading(.lazy)
-                                    .halftone(dotSize: 3.px)
+                                    .halftone(
+                                        dotSize: .px(3),
+                                        lineColor: .black
+                                    )
                             }
-                            .clipPath(.circle(50.percent))
+                            .clipPath(.circle(.percent(50)))
                             .position(.relative)
-                            .size(5.rem)
+                            .size(.rem(5))
                         }
                         .flexContainer(
                             justification: .center,
                             itemAlignment: .center
                         )
-                        .margin(top: .medium)
-                        .margin(bottom: .small)
+                        .margin(top: .length(.medium))
+                        .margin(bottom: .length(.small))
                         
                         div {
                             Header(4) {
@@ -57,7 +62,7 @@ extension View.Subscribe {
                             }
                         }
                         
-                        Paragraph {
+                        CoenttbHTML.Paragraph {
                             HTMLText(caption.capitalizingFirstLetter().period.description)
                         }
                         
@@ -69,25 +74,26 @@ extension View.Subscribe {
                             Divider()
                         }
                         
-                        Link(.continue_reading.capitalizingFirstLetter().description, href: nil)
-                            .fontStyle(.body(.small))
+                        Link(
+                            .continue_reading.capitalizingFirstLetter().description,
+                            href: nil
+                        )
+                            .font(.body(.small))
                             .cursor(.pointer)
-                            .onclick("continueReading()")
-                            .padding(.extraSmall)
+                            .id(buttonId.uuidString)
+                            .padding(.length(.extraSmall))
                     }
                     
                     script {
                     """
-                    function continueReading() {
-                        // dismissOverlay();
-                        hideOverlay_\(String.sanitizeForJavaScript(subscribeOverlayId()))(\(saveToLocalstorage))
-                        console.log("test")
-                    }
-                    
-                    function subscribe() {
-                        // alert('Thank you for subscribing!');
-                        // dismissOverlay();
-                    }
+                    (() => {
+                        const btn = document.getElementById('\(buttonId.uuidString)');
+                        if (!btn) return;
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            hideOverlay_\(String.sanitizeForJavaScript(subscribeOverlayId()))(\(saveToLocalstorage));
+                        });
+                    })();
                     """
                     }
                 }
@@ -95,5 +101,4 @@ extension View.Subscribe {
         }
     }
 }
-
 
