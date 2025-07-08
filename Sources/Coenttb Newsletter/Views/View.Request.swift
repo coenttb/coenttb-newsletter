@@ -140,7 +140,6 @@ public struct NewsletterSubscriptionForm: HTML {
                             body: new URLSearchParams({ \(Request.CodingKeys.email.rawValue): email }).toString()
                         });
 
-
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
