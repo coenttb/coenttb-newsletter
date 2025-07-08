@@ -81,7 +81,7 @@ extension View {
                        
                         if (data.success) {
                             const pageModule = document.getElementById("\(Self.pagemodule_verify_id)");
-                            pageModule.outerHTML = "\(html: Verify.ConfirmationPage(redirectURL: verificationRedirectURL()))";
+                            pageModule.outerHTML = \(html: Verify.ConfirmationPage(redirectURL: verificationRedirectURL()));
                             setTimeout(() => { window.location.href = '\(verificationRedirectURL().absoluteString)'; }, 5000);
 
                         } else {

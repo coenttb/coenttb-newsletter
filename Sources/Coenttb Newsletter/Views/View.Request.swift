@@ -147,7 +147,7 @@ public struct NewsletterSubscriptionForm: HTML {
                         const data = await response.json();
 
                         if (data.success) {
-                            formContainer.innerHTML = '\(String(decoding: successSection.render(), as: UTF8.self))';
+                            formContainer.innerHTML = \(html: successSection);
                             console.log(formContainer.innerHTML)
                         } else {
                             throw new Error(data.message || 'Subscription failed');
