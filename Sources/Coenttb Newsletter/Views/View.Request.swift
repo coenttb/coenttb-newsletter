@@ -147,7 +147,7 @@ public struct NewsletterSubscriptionForm: HTML {
                         const data = await response.json();
 
                         if (data.success) {
-                            formContainer.innerHTML = atob("\(Data(successSection.render()).base64EncodedString())");
+                            formContainer.innerHTML = \(HTMLRaw(successSection.render()));
                         } else {
                             throw new Error(data.message || 'Subscription failed');
                         }
