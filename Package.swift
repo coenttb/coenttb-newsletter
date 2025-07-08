@@ -51,6 +51,7 @@ let package = Package(
             dependencies: [
                 .coenttbWeb,
                 .dependenciesMacros,
+                .rateLimiter
             ]
         ),
         .target(

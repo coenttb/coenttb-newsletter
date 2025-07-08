@@ -148,18 +148,26 @@ public struct NewsletterSubscriptionForm: HTML {
                         const data = await response.json();
 
                         if (data.success) {
-                            formContainer.innerHTML = `\(String(decoding: successSection.render(), as: UTF8.self))`;
+                            formContainer.innerHTML = atob("\(Data(successSection.render()).base64EncodedString())");
                         } else {
                             throw new Error(data.message || 'Subscription failed');
                         }
             
                     } catch (error) {
                         console.error('Error:', error);
+                        const existing = form.querySelector('.error-message');
+                        if (existing) {
+                            existing.remove();
+                        }
+
+                        // Create and style new error message
                         const messageDiv = document.createElement('div');
-                        messageDiv.textContent = 'An error occurred. Please try again.';
+                        messageDiv.className = 'error-message';
+                        messageDiv.textContent = `An error occurred: ${error.message || error}`;
                         messageDiv.style.color = 'red';
                         messageDiv.style.textAlign = 'center';
                         messageDiv.style.marginTop = '10px';
+
                         form.appendChild(messageDiv);
                     }
                 });
@@ -198,3 +206,13 @@ public struct NewsletterSubscriptionForm: HTML {
         .textAlign(.center, media: .desktop)
     }
 }
+
+#if DEBUG && canImport(SwiftUI)
+import SwiftUI
+
+#Preview {
+    HTMLDocument {
+        NewsletterSubscriptionForm(subscribeAction: .init(string: "#")!)
+    }
+}
+#endif

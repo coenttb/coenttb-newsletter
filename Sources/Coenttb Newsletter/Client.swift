@@ -7,7 +7,6 @@
 
 import Coenttb_Web
 import DependenciesMacros
-import RateLimiter
 
 @DependencyClient
 public struct Client: @unchecked Sendable {
