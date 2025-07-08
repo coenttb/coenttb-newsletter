@@ -132,7 +132,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                         if (data.success) {
                             localStorage.removeItem(localStorageKey);
 
-                            formContainer.innerHTML = `\(HTMLRaw(successSection.render()))`;
+                            formContainer.innerHTML = `\(html: successSection)`;
                         } else {
                             throw new Error(data.message || 'Unsubscription failed');
                         }
