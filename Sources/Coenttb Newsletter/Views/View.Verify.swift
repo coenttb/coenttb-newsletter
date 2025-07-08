@@ -23,85 +23,84 @@ extension View {
         private static let pagemodule_verify_id: String = "pagemodule_verify_id"
         
         public var body: some HTML {
-            HTMLEmpty()
-//            PageModule(theme: .login) {
-//                VStack(alignment: .center) {
-//                    div() { }
-//                        .id("spinner")
-//                    h2 { "message" }
-//                        .id("message")
-//                }
-//                .textAlign(.center)
-//                .alignItems(.center)
-//                .textAlign(.start, media: .mobile)
-//                .alignItems(.leading, media: .mobile)
-//                .width(.percent(100))
-//                .maxWidth(.rem(20))
-//                .maxWidth(.rem(24), media: .mobile)
-//                .margin(vertical: nil, horizontal: .auto)
-//                
-//            } title: {
-//                Header(3) {
-//                    TranslatedString(
-//                        dutch: "Verificatie in uitvoering...",
-//                        english: "Verification in Progress..."
-//                    )
-//                }
-//                .display(.inlineBlock)
-//                .textAlign(.center)
-//            }
-//            .id(Self.pagemodule_verify_id)
-//            
-//            script {"""
-//                document.addEventListener('DOMContentLoaded', function() {
-//                    const urlParams = new URLSearchParams(window.location.search);
-//                    const token = urlParams.get('token');
-//                    const email = urlParams.get('email');
-//                    
-//                    if (token && email) {
-//                        verifyEmail(token, email); // Pass both token and email to the function
-//                    } else {
-//                        showMessage('Error: No verification token or email found.', false);
-//                    }
-//                });
-//            
-//                async function verifyEmail(token, email) {
-//                    try {
-//                        // Create a URL object from the verificationAction
-//                        const url = new URL('\(verificationAction.absoluteString)');
-//                        
-//                        // Update or add the token and email parameters
-//                        url.searchParams.set('token', token);
-//                        url.searchParams.set('email', email);
-//            
-//                        const response = await fetch(url.toString(), {
-//                            method: 'POST'
-//                        });
-//                        const data = await response.json();
-//                        
-//                       
-//                        if (data.success) {
-//                            const pageModule = document.getElementById("\(Self.pagemodule_verify_id)");
-//                            pageModule.outerHTML = "\(html: Verify.ConfirmationPage(redirectURL: verificationRedirectURL()))";
-//                            setTimeout(() => { window.location.href = '\(verificationRedirectURL().absoluteString)'; }, 5000);
-//
-//                        } else {
-//                            throw new Error(data.message || 'Account creation failed');
-//                        }
-//                    } catch (error) {
-//                        console.error("Error occurred:", error);
-//                        showMessage('An error occurred during verification. Please try again later.', false);
-//                    }
-//                }
-//            
-//                function showMessage(message, isSuccess) {
-//                    const messageElement = document.getElementById('message');
-//                    const spinnerElement = document.getElementById('spinner');
-//                    messageElement.textContent = message;
-//                    messageElement.className = isSuccess ? 'success' : 'error';
-//                    spinnerElement.style.display = 'none';
-//                }
-//            """}
+            PageModule(theme: .login) {
+                VStack(alignment: .center) {
+                    div() { }
+                        .id("spinner")
+                    h2 { "message" }
+                        .id("message")
+                }
+                .textAlign(.center)
+                .alignItems(.center)
+                .textAlign(.start, media: .mobile)
+                .alignItems(.leading, media: .mobile)
+                .width(.percent(100))
+                .maxWidth(.rem(20))
+                .maxWidth(.rem(24), media: .mobile)
+                .margin(vertical: nil, horizontal: .auto)
+                
+            } title: {
+                Header(3) {
+                    TranslatedString(
+                        dutch: "Verificatie in uitvoering...",
+                        english: "Verification in Progress..."
+                    )
+                }
+                .display(.inlineBlock)
+                .textAlign(.center)
+            }
+            .id(Self.pagemodule_verify_id)
+            
+            script {"""
+                document.addEventListener('DOMContentLoaded', function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const token = urlParams.get('token');
+                    const email = urlParams.get('email');
+                    
+                    if (token && email) {
+                        verifyEmail(token, email); // Pass both token and email to the function
+                    } else {
+                        showMessage('Error: No verification token or email found.', false);
+                    }
+                });
+            
+                async function verifyEmail(token, email) {
+                    try {
+                        // Create a URL object from the verificationAction
+                        const url = new URL('\(verificationAction.absoluteString)');
+                        
+                        // Update or add the token and email parameters
+                        url.searchParams.set('token', token);
+                        url.searchParams.set('email', email);
+            
+                        const response = await fetch(url.toString(), {
+                            method: 'POST'
+                        });
+                        const data = await response.json();
+                        
+                       
+                        if (data.success) {
+                            const pageModule = document.getElementById("\(Self.pagemodule_verify_id)");
+                            pageModule.outerHTML = "\(HTMLRaw(Verify.ConfirmationPage(redirectURL: verificationRedirectURL()).render()))";
+                            setTimeout(() => { window.location.href = '\(verificationRedirectURL().absoluteString)'; }, 5000);
+
+                        } else {
+                            throw new Error(data.message || 'Account creation failed');
+                        }
+                    } catch (error) {
+                        console.error("Error occurred:", error);
+                        showMessage('An error occurred during verification. Please try again later.', false);
+                    }
+                }
+            
+                function showMessage(message, isSuccess) {
+                    const messageElement = document.getElementById('message');
+                    const spinnerElement = document.getElementById('spinner');
+                    messageElement.textContent = message;
+                    messageElement.className = isSuccess ? 'success' : 'error';
+                    spinnerElement.style.display = 'none';
+                }
+            """}
         }
     }
 }
