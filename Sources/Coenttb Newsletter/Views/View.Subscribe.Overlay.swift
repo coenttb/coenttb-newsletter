@@ -9,7 +9,7 @@ import Coenttb_Web
 
 extension View.Subscribe {
     public struct Overlay: HTML {
-        let image: (() -> HTMLElementTypes.Image)?
+        let image: (() -> any HTML)?
         let title: String
         let caption: String
         let buttonId = UUID()
@@ -33,7 +33,7 @@ extension View.Subscribe {
                 VStack(spacing: 0.5.rem) {
                     
                     if let image {
-                        image()
+                        AnyHTML(image())
                             .size(.rem(10)) // Make sure this is 10rem, not smaller
                             .position(.relative)
                             .flexContainer(
