@@ -17,7 +17,7 @@ extension View.Subscribe {
         public init(
             title: String,
             caption: String,
-            image: (() -> HTMLElementTypes.Image)? = nil
+            image: (() -> any HTML)? = nil
         ) {
             self.image = image
             self.title = title
