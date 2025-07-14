@@ -97,6 +97,7 @@ public struct NewsletterSubscriptionForm: HTML {
                         )
                     )
                 )
+                .styled()
                 div {
                     Button(
                         type: .submit

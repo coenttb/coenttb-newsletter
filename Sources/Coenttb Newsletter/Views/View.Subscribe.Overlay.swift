@@ -9,24 +9,19 @@ import Coenttb_Web
 
 extension View.Subscribe {
     public struct Overlay: HTML {
-        let image: HTMLElementTypes.Image
+        let image: (() -> HTMLElementTypes.Image)?
         let title: String
         let caption: String
-        let newsletterSubscribed: Bool
         let buttonId = UUID()
         
         public init(
-            image: HTMLElementTypes.Image,
             title: String,
             caption: String,
-            newsletterSubscribed: Bool
+            image: (() -> HTMLElementTypes.Image)? = nil
         ) {
-            var image = image
-            image.loading = .lazy
             self.image = image
             self.title = title
             self.caption = caption
-            self.newsletterSubscribed = newsletterSubscribed
         }
         
         @Dependency(\.newsletter.subscribeOverlayId) var subscribeOverlayId
@@ -34,68 +29,60 @@ extension View.Subscribe {
         @Dependency(\.newsletter.subscribeAction) var subscribeAction
         
         public var body: some HTML {
-            if newsletterSubscribed != true {
-                Coenttb_Web.Overlay(id: subscribeOverlayId()) {
-                    VStack(spacing: 0.5.rem) {
-                        div {
-                            div {
-                                image
-                                    .halftone(
-                                        dotSize: .px(3),
-                                        lineColor: .black
-                                    )
-                            }
-                            .clipPath(.circle(.percent(50)))
+            Coenttb_Web.Overlay(id: subscribeOverlayId()) {
+                VStack(spacing: 0.5.rem) {
+                    
+                    if let image {
+                        image()
+                            .size(.rem(10)) // Make sure this is 10rem, not smaller
                             .position(.relative)
-                            .size(.rem(5))
-                        }
-                        .flexContainer(
-                            justification: .center,
-                            itemAlignment: .center
-                        )
-                        .margin(top: .length(.medium))
-                        .margin(bottom: .length(.small))
-                        
-                        div {
-                            Header(4) {
-                                HTMLText(title)
-                            }
-                        }
-                        
-                        CoenttbHTML.Paragraph {
-                            HTMLText(caption.capitalizingFirstLetter().period.description)
-                        }
-                        
-                        NewsletterSubscriptionForm(
-                            subscribeAction: subscribeAction()
-                        )
-                        
-                        div{
-                            Divider()
-                        }
-                        
-                        Link(
-                            .continue_reading.capitalizingFirstLetter().description,
-                            href: nil
-                        )
-                            .font(.body(.small))
-                            .cursor(.pointer)
-                            .id(buttonId.uuidString)
-                            .padding(.length(.extraSmall))
+                            .flexContainer(
+                                justification: .center,
+                                itemAlignment: .center
+                            )
+                            .margin(top: .length(.medium))
+                            .margin(bottom: .length(.small))
                     }
                     
-                    script {
-                    """
-                    (() => {
-                        const btn = document.getElementById('\(buttonId.uuidString)');
-                        if (!btn) return;
-                        btn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            hideOverlay_\(String.sanitizeForJavaScript(subscribeOverlayId()))(\(saveToLocalstorage));
-                        });
-                    })();
-                    """
+                    div {
+                        Header(4) {
+                            HTMLText(title)
+                        }
                     }
+                    
+                    CoenttbHTML.Paragraph {
+                        HTMLText(caption.capitalizingFirstLetter().period.description)
+                    }
+                    
+                    NewsletterSubscriptionForm(
+                        subscribeAction: subscribeAction()
+                    )
+                    
+                    div{
+                        Divider()
+                    }
+                    
+                    Link(
+                        .continue_reading.capitalizingFirstLetter().description,
+                        href: nil
+                    )
+                        .font(.body(.small))
+                        .cursor(.pointer)
+                        .id(buttonId.uuidString)
+                        .padding(.length(.extraSmall))
+                }
+                
+                script {
+                """
+                (() => {
+                    const btn = document.getElementById('\(buttonId.uuidString)');
+                    if (!btn) return;
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        hideOverlay_\(String.sanitizeForJavaScript(subscribeOverlayId()))(\(saveToLocalstorage));
+                    });
+                })();
+                """
                 }
             }
         }
