@@ -9,9 +9,9 @@ import Coenttb_Newsletter
 import Coenttb_Web
 import Coenttb_Vapor
 
-extension Coenttb_Newsletter.Route {
+extension Newsletter.Route {
     public static func response(
-        newsletter: Coenttb_Newsletter.Route,
+        newsletter: Newsletter.Route,
         htmlDocument: (any HTML) -> any (HTMLDocumentProtocol & AsyncResponseEncodable)
     ) async throws -> any AsyncResponseEncodable {
         switch newsletter {

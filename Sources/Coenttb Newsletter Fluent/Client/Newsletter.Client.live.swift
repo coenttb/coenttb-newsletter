@@ -15,7 +15,7 @@ import Mailgun
 import Messages
 import Coenttb_Fluent
 
-extension Coenttb_Newsletter.Client {
+extension Coenttb_Newsletter.Newsletter.Client {
     public static func live(
         sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
         onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void,

@@ -7,22 +7,24 @@
 
 import Coenttb_Web
 
-public enum Route: Codable, Hashable, Sendable {
-    case api(API)
-    case view(View)
+extension Newsletter {
+    public enum Route: Codable, Hashable, Sendable {
+        case api(API)
+        case view(View)
+    }
 }
 
-extension Route {
+extension Newsletter.Route {
     public struct Router: ParserPrinter {
         
         public init(){}
         
-        public var body: some URLRouting.Router<Route> {
+        public var body: some URLRouting.Router<Newsletter.Route> {
             OneOf {
-                URLRouting.Route(.case(Route.api)) {
+                URLRouting.Route(.case(Newsletter.Route.api)) {
                     API.Router()
                 }
-                URLRouting.Route(.case(Route.view)) {
+                URLRouting.Route(.case(Newsletter.Route.view)) {
                     View.Router()
                 }
             }

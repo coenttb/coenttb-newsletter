@@ -17,7 +17,7 @@ public struct Newsletter: Sendable {
     public var configuration: Newsletter.Configuration
     
     public init(
-        client: Coenttb_Newsletter.Client,
+        client: Newsletter.Client,
         configuration: Newsletter.Configuration
     ) {
         self.client = client

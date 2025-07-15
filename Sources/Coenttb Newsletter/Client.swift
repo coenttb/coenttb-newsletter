@@ -8,20 +8,23 @@
 import Coenttb_Web
 import DependenciesMacros
 
-@DependencyClient
-public struct Client: @unchecked Sendable {
-    
-    public var subscribe: Coenttb_Newsletter.Client.Subscribe
+extension Newsletter {
+    @DependencyClient
+    public struct Client: @unchecked Sendable {
+        
+        public var subscribe: Newsletter.Client.Subscribe
 
-    @DependencyEndpoint
-    public var unsubscribe: (EmailAddress) async throws -> Void
+        @DependencyEndpoint
+        public var unsubscribe: (EmailAddress) async throws -> Void
+    }
 }
 
-extension Client: TestDependencyKey {
-    public static let testValue: Client = .testValue
+
+extension Newsletter.Client: TestDependencyKey {
+    public static let testValue: Newsletter.Client = .testValue
 }
 
-extension Coenttb_Newsletter.Client {
+extension Newsletter.Client {
     @DependencyClient
     public struct Subscribe: @unchecked Sendable {
         @DependencyEndpoint
@@ -32,7 +35,7 @@ extension Coenttb_Newsletter.Client {
 }
 
 
-extension Coenttb_Newsletter.Client.Subscribe: TestDependencyKey {
+extension Newsletter.Client.Subscribe: TestDependencyKey {
     public static var testValue: Self {
         .init(
             request: { _ in print("requested subscriptions") },
