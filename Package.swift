@@ -35,7 +35,7 @@ let package = Package(
     products: [
         .library(name: .coenttbNewsletter, targets: [.coenttbNewsletter]),
         .library(name: .coenttbNewsletterLive, targets: [.coenttbNewsletterLive]),
-        .library(name: .coenttbNewsletterFluent, targets: [.coenttbNewsletterFluent]),
+        .library(name: .coenttbNewsletterFluent, targets: [.coenttbNewsletterFluent])
     ],
     dependencies: [
         .package(url: "https://github.com/coenttb/coenttb-web.git", branch: "main"),
@@ -43,7 +43,7 @@ let package = Package(
         .package(url: "https://github.com/coenttb/coenttb-server-vapor.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-mailgun.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-utils.git", branch: "main"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0")
     ],
     targets: [
         .target(
@@ -62,7 +62,7 @@ let package = Package(
                 .coenttbVapor,
                 .coenttbNewsletter,
                 .rateLimiter,
-                .mailgun,
+                .mailgun
             ]
         ),
         .target(

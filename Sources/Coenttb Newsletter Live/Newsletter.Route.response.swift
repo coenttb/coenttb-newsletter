@@ -6,8 +6,8 @@
 //
 
 import Coenttb_Newsletter
-import Coenttb_Web
 import Coenttb_Vapor
+import Coenttb_Web
 
 extension Newsletter.Route {
     public static func response(

@@ -5,15 +5,14 @@
 //  Created by Coen ten Thije Boonkkamp on 16/10/2024.
 //
 
+import Coenttb_Database
+import Coenttb_Fluent
 import Coenttb_Newsletter
 import Coenttb_Newsletter_Live
-import Coenttb_Web
-import Coenttb_Database
 import Coenttb_Vapor
-import Coenttb_Newsletter
+import Coenttb_Web
 import Mailgun
 import Messages
-import Coenttb_Fluent
 
 extension Coenttb_Newsletter.Newsletter.Client {
     public static func live(
@@ -24,7 +23,7 @@ extension Coenttb_Newsletter.Newsletter.Client {
         @Dependency(\.database) var database
         @Dependency(\.logger) var logger
         @Dependency(\.newsletter.verificationTimeout) var verificationTimeout
-        
+
         return .init(
             subscribe: .init(
                 request: { emailAddress in
@@ -34,7 +33,7 @@ extension Coenttb_Newsletter.Newsletter.Client {
                             if let existingSubscription = try await Newsletter.query(on: database)
                                 .filter(\.$email == emailAddress.rawValue)
                                 .first() {
-                                
+
                                 switch existingSubscription.emailVerificationStatus {
                                 case .verified:
                                     logger.info("Email already verified: \(emailAddress.rawValue)")
@@ -47,18 +46,18 @@ extension Coenttb_Newsletter.Newsletter.Client {
                                     try await existingSubscription.delete(on: database)
                                 }
                             }
-                            
+
                             // Create new subscription
                             let subscription = try Newsletter(
                                 email: emailAddress.rawValue,
                                 emailVerificationStatus: .pending
                             )
                             try await subscription.save(on: database)
-                            
+
                             // Check token generation limit
                             guard try await subscription.canGenerateToken(on: database)
                             else { throw ValidationError.tooManyAttempts("Token generation limit exceeded") }
-                            
+
                             // Generate and save token
                             @Dependency(\.date) var date
                             let verificationToken = try subscription.generateToken(
@@ -66,20 +65,20 @@ extension Coenttb_Newsletter.Newsletter.Client {
                                 validUntil: date().addingTimeInterval(verificationTimeout())
                             )
                             try await verificationToken.save(on: database)
-                            
+
                             let response = try await sendVerificationEmail(emailAddress, verificationToken.value)
-                            
+
                             if response.message.contains("Queued") {
                                 logger.info("Verification email queued successfully: \(response.id)")
-                                
+
                                 subscription.lastEmailMessageId = response.id
                                 try await subscription.save(on: database)
                             } else {
                                 logger.error("Unexpected response from email service: \(response.message)")
-                                
+
                                 subscription.emailVerificationStatus = .failed
                                 try await subscription.save(on: database)
-                                
+
                                 try await verificationToken.delete(on: database)
                             }
                         }
@@ -102,27 +101,27 @@ extension Coenttb_Newsletter.Newsletter.Client {
                                 .first() else {
                                 throw ValidationError.invalidToken
                             }
-                            
+
                             // Validate token
                             @Dependency(\.date) var date
                             guard verificationToken.validUntil > date() else {
                                 try await verificationToken.delete(on: database)
                                 throw ValidationError.invalidToken
                             }
-                            
+
                             guard verificationToken.newsletter.email == email.rawValue else {
                                 throw ValidationError.invalidInput("Email mismatch")
                             }
-                            
+
                             guard verificationToken.newsletter.emailVerificationStatus == .pending else {
                                 throw ValidationError.invalidVerificationStatus("Invalid verification status")
                             }
-                            
+
                             // Update verification status
                             verificationToken.newsletter.emailVerificationStatus = .verified
                             try await verificationToken.newsletter.save(on: database)
                             try await verificationToken.delete(on: database)
-                             
+
                             logger.notice("Newsletter subscription verified for: \(email)")
                         }
                         @Dependency(\.fireAndForget) var fireAndForget
@@ -141,9 +140,9 @@ extension Coenttb_Newsletter.Newsletter.Client {
                         try await Newsletter.query(on: database)
                             .filter(\.$email == emailAddress.rawValue)
                             .delete()
-                        
+
                         logger.notice("Newsletter unsubscribed for: \(emailAddress.rawValue)")
-                        
+
                         try await onUnsubscribed(emailAddress)
                     }
                 } catch {

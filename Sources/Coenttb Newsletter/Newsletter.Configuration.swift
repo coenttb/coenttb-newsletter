@@ -5,33 +5,10 @@
 //  Created by Coen ten Thije Boonkkamp on 11/03/2025.
 //
 
-import Foundation
-import RateLimiter
 import Dependencies
 import DependenciesMacros
-
-@DependencyClient
-@dynamicMemberLookup
-public struct Newsletter: Sendable {
-    public var client: Client
-    public var configuration: Newsletter.Configuration
-    
-    public init(
-        client: Newsletter.Client,
-        configuration: Newsletter.Configuration
-    ) {
-        self.client = client
-        self.configuration = configuration
-    }
-    
-    public subscript<T>(dynamicMember keyPath: WritableKeyPath<Client, T>) -> T {
-        self.client[keyPath: keyPath]
-    }
-    
-    public subscript<T>(dynamicMember keyPath: WritableKeyPath<Newsletter.Configuration, T>) -> T {
-        self.configuration[keyPath: keyPath]
-    }
-}
+import Foundation
+import RateLimiter
 
 extension Newsletter {
     public struct Configuration: Sendable {
@@ -43,13 +20,13 @@ extension Newsletter {
         public var subscribeOverlayId: @Sendable () -> String
         public var unsubscribeAction: @Sendable () -> URL
         public var unsubscribeFormId: @Sendable () -> String
-        public var verificationAction: @Sendable (_ verification: Verification) -> URL
+        public var verificationAction: @Sendable (_ verification: Newsletter.Route.API.Subscribe.Verification) -> URL
         public var verificationRedirectURL: @Sendable () -> URL
         public var verificationTimeout: @Sendable () -> TimeInterval
         public var localStorageKey: @Sendable () -> String
         public var emailLimiter: RateLimiter<RateLimitKey>
         public var ipLimiter: RateLimiter<RateLimitKey>
-        
+
         public init(
             saveToLocalstorage: Bool,
             localStorageKey: @Sendable @escaping () -> String = { "newsletter-storage-key" },
@@ -60,7 +37,7 @@ extension Newsletter {
             subscribeOverlayId: @Sendable @escaping () -> String,
             unsubscribeAction: @Sendable @escaping () -> URL,
             unsubscribeFormId: @Sendable @escaping () -> String,
-            verificationAction: @Sendable @escaping (Verification) -> URL,
+            verificationAction: @Sendable @escaping (Newsletter.Route.API.Subscribe.Verification) -> URL,
             verificationRedirectURL: @Sendable @escaping () -> URL,
             verificationTimeout: @Sendable @escaping () -> TimeInterval = { 24 * 60 * 60 },
             emailLimiter: RateLimiter<RateLimitKey> = .emailLimiter,

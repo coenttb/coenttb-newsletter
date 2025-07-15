@@ -7,25 +7,25 @@
 
 import Coenttb_Web
 
-extension View {
+extension Newsletter.Route.View {
     public struct Verify: HTML {
-        
+
         @Dependency(\.newsletter.verificationRedirectURL) var verificationRedirectURL
-        
+
         let verificationAction: URL
-        
+
         public init(
             verificationAction: URL
         ) {
             self.verificationAction = verificationAction
         }
-        
+
         private static let pagemodule_verify_id: String = "pagemodule_verify_id"
-        
+
         public var body: some HTML {
             PageModule(theme: .login) {
                 VStack(alignment: .center) {
-                    div() { }
+                    div { }
                         .id("spinner")
                     h2 { "message" }
                         .id("message")
@@ -38,7 +38,7 @@ extension View {
                 .maxWidth(.rem(20))
                 .maxWidth(.rem(24), media: .mobile)
                 .margin(vertical: nil, horizontal: .auto)
-                
+
             } title: {
                 Header(3) {
                     TranslatedString(
@@ -50,38 +50,38 @@ extension View {
                 .textAlign(.center)
             }
             .id(Self.pagemodule_verify_id)
-            
+
             script {"""
                 document.addEventListener('DOMContentLoaded', function() {
                     const urlParams = new URLSearchParams(window.location.search);
                     const token = urlParams.get('token');
                     const email = urlParams.get('email');
-                    
+
                     if (token && email) {
                         verifyEmail(token, email); // Pass both token and email to the function
                     } else {
                         showMessage('Error: No verification token or email found.', false);
                     }
                 });
-            
+
                 async function verifyEmail(token, email) {
                     try {
                         // Create a URL object from the verificationAction
                         const url = new URL('\(verificationAction.absoluteString)');
-                        
+
                         // Update or add the token and email parameters
                         url.searchParams.set('token', token);
                         url.searchParams.set('email', email);
-            
+
                         const response = await fetch(url.toString(), {
                             method: 'POST'
                         });
                         const data = await response.json();
-                        
-                       
+
+
                         if (data.success) {
                             const pageModule = document.getElementById("\(Self.pagemodule_verify_id)");
-                            pageModule.outerHTML = \(html: Verify.ConfirmationPage(redirectURL: verificationRedirectURL()));
+                            pageModule.outerHTML = \(html: Newsletter.Route.View.Verify.ConfirmationPage(redirectURL: verificationRedirectURL()));
                             setTimeout(() => { window.location.href = '\(verificationRedirectURL().absoluteString)'; }, 5000);
 
                         } else {
@@ -92,7 +92,7 @@ extension View {
                         showMessage('An error occurred during verification. Please try again later.', false);
                     }
                 }
-            
+
                 function showMessage(message, isSuccess) {
                     const messageElement = document.getElementById('message');
                     const spinnerElement = document.getElementById('spinner');
@@ -105,14 +105,14 @@ extension View {
     }
 }
 
-extension View.Verify {
+extension Newsletter.Route.View.Verify {
     public struct ConfirmationPage: HTML {
         let redirectURL: URL
-        
+
         public init(redirectURL: URL) {
             self.redirectURL = redirectURL
         }
-        
+
         public var body: some HTML {
             PageModule(theme: .login) {
                 VStack(alignment: .center) {
@@ -124,7 +124,7 @@ extension View.Verify {
                     }
                     .textAlign(.center)
                     .marginBottom(.rem(1))
-                    
+
                     CoenttbHTML.Paragraph {
                         TranslatedString(
                             dutch: "U wordt over 5 seconden doorgestuurd naar de inlogpagina.",
@@ -133,7 +133,7 @@ extension View.Verify {
                     }
                     .textAlign(.center)
                     .margin(bottom: .rem(2))
-                    
+
                     Link(href: .init(redirectURL.absoluteString)) {
                         TranslatedString(
                             dutch: "Klik hier als u niet automatisch wordt doorgestuurd",
@@ -158,8 +158,6 @@ extension View.Verify {
         }
     }
 }
-
-
 
 extension PageModule.Theme {
     static var login: Self {

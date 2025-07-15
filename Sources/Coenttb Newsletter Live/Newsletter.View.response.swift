@@ -6,38 +6,38 @@
 //
 
 import Coenttb_Newsletter
-import Coenttb_Web
 import Coenttb_Vapor
+import Coenttb_Web
 
-extension Coenttb_Newsletter.View {
+extension Newsletter.Route.View {
     public static func response(
-        newsletter: Coenttb_Newsletter.View,
+        newsletter: Newsletter.Route.View,
         htmlDocument: (any HTML) -> any (HTMLDocumentProtocol & AsyncResponseEncodable)
     ) async throws -> any AsyncResponseEncodable {
         switch newsletter {
         case .subscribe(let subscribe):
             switch subscribe {
             case .request:
-                return htmlDocument (
+                return htmlDocument(
                     AnyHTML(
-                        View.Subscribe.Request()
+                        Newsletter.Route.View.Subscribe.Request()
                     )
                 )
             case .verify(let verify):
                 @Dependency(\.newsletter.verificationAction) var verificationAction
-                return htmlDocument (
+                return htmlDocument(
                     AnyHTML(
-                        View.Verify(
+                        Newsletter.Route.View.Verify(
                             verificationAction: verificationAction(verify)
                         )
                     )
                 )
             }
         case .unsubscribe:
-            return htmlDocument (
+            return htmlDocument(
                 AnyHTML(
                     VStack {
-                        View.Unsubscribe()
+                        Newsletter.Route.View.Unsubscribe()
                     }
                         .margin(vertical: .rem(3))
                 )

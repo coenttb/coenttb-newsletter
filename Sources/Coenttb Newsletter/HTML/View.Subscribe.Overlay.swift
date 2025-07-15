@@ -7,13 +7,13 @@
 
 import Coenttb_Web
 
-extension View.Subscribe {
+extension Newsletter.Route.View.Subscribe {
     public struct Overlay: HTML {
         let image: (() -> any HTML)?
         let title: String
         let caption: String
         let buttonId = UUID()
-        
+
         public init(
             title: String,
             caption: String,
@@ -23,15 +23,15 @@ extension View.Subscribe {
             self.title = title
             self.caption = caption
         }
-        
+
         @Dependency(\.newsletter.subscribeOverlayId) var subscribeOverlayId
         @Dependency(\.newsletter.saveToLocalstorage) var saveToLocalstorage
         @Dependency(\.newsletter.subscribeAction) var subscribeAction
-        
+
         public var body: some HTML {
             Coenttb_Web.Overlay(id: subscribeOverlayId()) {
                 VStack(spacing: 0.5.rem) {
-                    
+
                     if let image {
                         AnyHTML(image())
                             .size(.rem(10)) // Make sure this is 10rem, not smaller
@@ -43,25 +43,25 @@ extension View.Subscribe {
                             .margin(top: .length(.medium))
                             .margin(bottom: .length(.small))
                     }
-                    
+
                     div {
                         Header(4) {
                             HTMLText(title)
                         }
                     }
-                    
+
                     CoenttbHTML.Paragraph {
                         HTMLText(caption.capitalizingFirstLetter().period.description)
                     }
-                    
+
                     NewsletterSubscriptionForm(
                         subscribeAction: subscribeAction()
                     )
-                    
-                    div{
+
+                    div {
                         Divider()
                     }
-                    
+
                     Link(
                         .continue_reading.capitalizingFirstLetter().description,
                         href: nil
@@ -71,7 +71,7 @@ extension View.Subscribe {
                         .id(buttonId.uuidString)
                         .padding(.length(.extraSmall))
                 }
-                
+
                 script {
                 """
                 (() => {
@@ -88,4 +88,3 @@ extension View.Subscribe {
         }
     }
 }
-

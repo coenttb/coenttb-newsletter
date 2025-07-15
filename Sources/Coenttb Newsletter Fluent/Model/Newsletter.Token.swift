@@ -5,37 +5,37 @@
 //  Created by Coen ten Thije Boonkkamp on 18/12/2024.
 //
 
+import Coenttb_Newsletter
+import Coenttb_Newsletter_Live
 import Dependencies
 @preconcurrency import Fluent
 import Foundation
 @preconcurrency import Vapor
-import Coenttb_Newsletter
-import Coenttb_Newsletter_Live
 
 extension Newsletter {
     public final class Token: Model, @unchecked Sendable {
-        public static var schema:String { "newsletter_verification_tokens" }
-        
+        public static var schema: String { "newsletter_verification_tokens" }
+
         @ID(key: .id)
         public var id: UUID?
-        
+
         @Field(key: FieldKeys.value)
         public var value: String
-        
+
         @Field(key: FieldKeys.type)
         public var type: TokenType
-        
+
         @Field(key: FieldKeys.validUntil)
         public var validUntil: Date
-        
+
         @Parent(key: FieldKeys.newsletterId)
         public var newsletter: Newsletter
-        
+
         @Timestamp(key: FieldKeys.createdAt, on: .create)
         public var createdAt: Date?
-        
+
         public init() { }
-        
+
         public init(
             newsletter: Newsletter,
             type: TokenType,
@@ -48,12 +48,12 @@ extension Newsletter {
             self.validUntil = validUntil ?? date().addingTimeInterval(verificationTimeout())
             self.$newsletter.id = try newsletter.requireID()
         }
-        
+
         public var isValid: Bool {
             @Dependency(\.date) var date
             return validUntil > date()
         }
-        
+
         enum FieldKeys {
             static let value: FieldKey = "value"
             static let type: FieldKey = "type"
@@ -61,14 +61,14 @@ extension Newsletter {
             static let newsletterId: FieldKey = "newsletter_id"
             static let createdAt: FieldKey = "created_at"
         }
-        
+
         public struct TokenType: RawRepresentable, Codable, Equatable, Sendable {
             public let rawValue: String
-            
+
             public init(rawValue: String) {
                 self.rawValue = rawValue
             }
-            
+
             public static let emailVerification: Self = .init(rawValue: "email_verification")
         }
     }
@@ -79,15 +79,14 @@ extension Newsletter.Token {
     static let generationWindow: TimeInterval = 3600 // 1 hour
 }
 
-
 extension Newsletter.Token {
     public enum Migration {
         public struct Create: AsyncMigration {
-            
+
             public var name: String = "Coenttb_Newsletter.Newsletter.Token.Migration.Create"
-            
+
             public init() {}
-            
+
             public func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.Token.schema)
                     .id()
@@ -99,7 +98,7 @@ extension Newsletter.Token {
                     .unique(on: FieldKeys.value)
                     .create()
             }
-            
+
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.Token.schema).delete()
             }

@@ -7,19 +7,19 @@
 
 import Coenttb_Web
 
-extension View {
+extension Newsletter.Route.View {
     public struct Unsubscribe: HTML {
-        
+
         @Dependency(\.newsletter.localStorageKey) var localStorageKey
         @Dependency(\.newsletter.unsubscribeAction) var unsubscribeAction
         @Dependency(\.newsletter.unsubscribeFormId) var unsubscribeFormId
-        
+
         public init(
-            
+
         ) {
-            
+
         }
-        
+
         public var body: some HTML {
             PageModule(theme: .newsletterSubscription) {
                 VStack {
@@ -48,17 +48,17 @@ extension View {
 }
 
 public struct NewsletterUnsubscriptionForm: HTML {
-    
+
     @Dependency(\.newsletter.localStorageKey) var localStorageKey
     @Dependency(\.newsletter.unsubscribeAction) var unsubscribeAction
     @Dependency(\.newsletter.unsubscribeFormId) var unsubscribeFormId
 
     public init(
-        
+
     ) {
-        
+
     }
-    
+
     public var body: some HTML {
         form(
             action: .init(unsubscribeAction().absoluteString),
@@ -66,7 +66,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
         ) {
             VStack {
                 Input(
-                    codingKey: Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email,
+                    codingKey: Newsletter.Route.API.Unsubscribe.CodingKeys.email,
                     type: .email(
                         .init(
                             value: "",
@@ -81,7 +81,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                         )
                     )
                 )
-                
+
                 div {
                     button(type: .submit) {
                         "\(String.unsubscribe.capitalizingFirstLetter())"
@@ -93,8 +93,8 @@ public struct NewsletterUnsubscriptionForm: HTML {
                     itemAlignment: .center,
                     media: .desktop
                 )
-                
-                div() {}
+
+                div {}
                     .id("\(unsubscribeFormId())-message")
             }
         }
@@ -111,7 +111,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue)');
+                    const email = formData.get('\(Newsletter.Route.API.Unsubscribe.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -120,7 +120,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(Coenttb_Newsletter.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(Newsletter.Route.API.Unsubscribe.CodingKeys.email.rawValue): email }).toString()
                         });
 
                         if (!response.ok) {
@@ -136,7 +136,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                         } else {
                             throw new Error(data.message || 'Unsubscription failed');
                         }
-            
+
                     } catch (error) {
                         console.error('Error:', error);
                         const messageDiv = document.createElement('div');
@@ -151,7 +151,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
             """
         }
     }
-    
+
     @HTMLBuilder
     var successSection: some HTML {
         VStack {
@@ -159,7 +159,7 @@ public struct NewsletterUnsubscriptionForm: HTML {
                 "Successfully unsubscribed"
             }
             .color(.red)
-            
+
             CoenttbHTML.Paragraph {
                 "You have been unsubscribed from our newsletter. We're sorry to see you go!"
             }

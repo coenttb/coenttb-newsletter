@@ -5,8 +5,8 @@
 //  Created by Coen ten Thije Boonkkamp on 11/03/2025.
 //
 
-import Foundation
 import Coenttb_Web
+import Foundation
 import Mailgun
 import Messages
 
@@ -45,7 +45,6 @@ extension Email {
                         .padding(bottom: .extraSmall)
                         .font(.body)
 
-                        
                         Link(href: .init(verificationUrl.absoluteString)) {
                             TranslatedString(
                                 dutch: "Verifieer e-mailadres",
@@ -54,7 +53,7 @@ extension Email {
                         }
                         .color(.text.primary.reverse())
                         .padding(bottom: .medium)
-                        
+
 //                        Button(
 //                            tag: a,
 //                            background: primaryColor

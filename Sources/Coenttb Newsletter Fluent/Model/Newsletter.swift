@@ -24,18 +24,18 @@ public final class Newsletter: Model, @unchecked Sendable {
 
     @Field(key: Newsletter.FieldKeys.emailVerificationStatus)
     public var emailVerificationStatus: EmailVerificationStatus
-    
+
     @Timestamp(key: Newsletter.FieldKeys.createdAt, on: .create)
     var createdAt: Date?
-    
+
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     public var updatedAt: Date?
-    
+
     @Field(key: FieldKeys.lastEmailMessageId)
     var lastEmailMessageId: String?
 
     public init() { }
-    
+
     public init(
         id: UUID? = nil,
         email: String,
@@ -55,7 +55,7 @@ public final class Newsletter: Model, @unchecked Sendable {
             throw error
         }
     }
-    
+
     enum FieldKeys {
         public static let email: FieldKey = "email"
         public static let emailVerificationStatus: FieldKey = "email_verification_status"
@@ -87,7 +87,7 @@ extension Newsletter {
 extension Newsletter {
     public func canGenerateToken(on db: Database) async throws -> Bool {
         guard let id = self.id else { return false }
-        
+
         @Dependency(\.date) var date
         let recentTokens = try await Newsletter.Token.query(on: db)
             .filter(\.$newsletter.$id == id)
@@ -98,15 +98,14 @@ extension Newsletter {
     }
 }
 
-
 extension Newsletter {
     public enum Migration {
         public struct Create: AsyncMigration {
-            
+
             public var name: String = "Coenttb_Newsletter.CreateNewsletter"
-            
+
             public init() {}
-            
+
             public func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .id()
@@ -115,41 +114,41 @@ extension Newsletter {
                     .unique(on: Newsletter.FieldKeys.email)
                     .create()
             }
-            
+
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema).delete()
             }
         }
-        
+
         public struct STEP_1_AddUpdatedAt: AsyncMigration {
-            
+
             public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
-            
+
             public init() {}
-            
+
             public func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .field(Newsletter.FieldKeys.updatedAt, .datetime, .required)
                     .update()
-                
+
                 try await Newsletter.query(on: database)
                     .set(\.$updatedAt, to: .now)
                     .update()
             }
-            
+
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .deleteField(Newsletter.FieldKeys.updatedAt)
                     .update()
             }
         }
-        
+
         public struct STEP_2_AddEmailVerification: AsyncMigration {
-            
+
             public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
-            
+
             public init() {}
-            
+
             public func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .field(FieldKeys.emailVerificationStatus, .string, .required)
@@ -159,26 +158,26 @@ extension Newsletter {
                     .set(\.$emailVerificationStatus, to: .unverified)
                     .update()
             }
-            
+
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .deleteField(FieldKeys.emailVerificationStatus)
                     .update()
             }
         }
-        
+
         public struct STEP_3_AddLastEmailMessageId: AsyncMigration {
-            
+
             public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
-            
+
             public init() {}
-            
+
             public func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .field(FieldKeys.lastEmailMessageId, .string)
                     .update()
             }
-            
+
             public func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .deleteField(FieldKeys.lastEmailMessageId)

@@ -7,17 +7,15 @@
 
 import Coenttb_Web
 
-extension View.Subscribe {
+extension Newsletter.Route.View.Subscribe {
     public struct Request: HTML {
-        
-        public init(
-        ) {
-            
-        }
+
         @Dependency(\.newsletter.subscribeFormId) var subscribeFormId
         @Dependency(\.newsletter.subscribeCaption) var caption
         @Dependency(\.newsletter.subscribeAction) var subscribeAction
-        
+
+        public init() {}
+
         public var body: some HTML {
             PageModule(theme: .newsletterSubscription) {
                 VStack {
@@ -25,7 +23,7 @@ extension View.Subscribe {
                         HTMLText(caption())
                     }
                     .textAlign(.center)
-                    
+
                     NewsletterSubscriptionForm(form_id: subscribeFormId(), subscribeAction: subscribeAction())
                 }
                 .maxWidth(.rem(30), media: .desktop)
@@ -65,7 +63,7 @@ extension PageModule.Theme {
 public struct NewsletterSubscriptionForm: HTML {
     let form_id: String
     let subscribeAction: URL
-    
+
     public init(
         form_id: String = UUID().uuidString,
         subscribeAction: URL
@@ -73,7 +71,7 @@ public struct NewsletterSubscriptionForm: HTML {
         self.form_id = form_id
         self.subscribeAction = subscribeAction
     }
-    
+
     public var body: some HTML {
         form(
             action: .init(subscribeAction.absoluteString),
@@ -82,7 +80,7 @@ public struct NewsletterSubscriptionForm: HTML {
             VStack {
 
                 Input(
-                    codingKey: Request.CodingKeys.email,
+                    codingKey: Newsletter.Route.API.Subscribe.Request.CodingKeys.email,
                     type: .email(
                         .init(
                             value: "",
@@ -111,8 +109,8 @@ public struct NewsletterSubscriptionForm: HTML {
                     itemAlignment: .center,
                     media: .desktop
                 )
-                                
-                div() {}
+
+                div {}
                     .id("\(form_id)-message")
             }
         }
@@ -128,7 +126,7 @@ public struct NewsletterSubscriptionForm: HTML {
                     event.preventDefault();
 
                     const formData = new FormData(form);
-                    const email = formData.get('\(Request.CodingKeys.email.rawValue)');
+                    const email = formData.get('\(Newsletter.Route.API.Subscribe.Request.CodingKeys.email.rawValue)');
 
                     try {
                         const response = await fetch(form.action, {
@@ -137,7 +135,7 @@ public struct NewsletterSubscriptionForm: HTML {
                                 'Content-Type': 'application/x-www-form-urlencoded',
                                 'Accept': 'application/json'
                             },
-                            body: new URLSearchParams({ \(Request.CodingKeys.email.rawValue): email }).toString()
+                            body: new URLSearchParams({ \(Newsletter.Route.API.Subscribe.Request.CodingKeys.email.rawValue): email }).toString()
                         });
 
                         if (!response.ok) {
@@ -152,7 +150,7 @@ public struct NewsletterSubscriptionForm: HTML {
                         } else {
                             throw new Error(data.message || 'Subscription failed');
                         }
-            
+
                     } catch (error) {
                         console.error('Error:', error);
                         const existing = form.querySelector('.error-message');
@@ -175,7 +173,7 @@ public struct NewsletterSubscriptionForm: HTML {
             """
         }
     }
-    
+
     @HTMLBuilder
     var successSection: some HTML {
         VStack {
@@ -186,14 +184,14 @@ public struct NewsletterSubscriptionForm: HTML {
                 )
             }
             .color(.blue)
-            
+
             CoenttbHTML.Paragraph {
                 TranslatedString(
                     dutch: "Controleer je inbox voor een verificatie-e-mail. Klik op de link in de e-mail om je inschrijving te voltooien",
                     english: "Please check your inbox for a verification email. Click the link in the email to complete your subscription"
                 ).period
             }
-            
+
             CoenttbHTML.Paragraph {
                 TranslatedString(
                     dutch: "Als je de e-mail niet ziet, controleer dan je spam-map",

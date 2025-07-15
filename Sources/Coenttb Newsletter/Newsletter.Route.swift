@@ -9,23 +9,23 @@ import Coenttb_Web
 
 extension Newsletter {
     public enum Route: Codable, Hashable, Sendable {
-        case api(API)
-        case view(View)
+        case api(Newsletter.Route.API)
+        case view(Newsletter.Route.View)
     }
 }
 
 extension Newsletter.Route {
     public struct Router: ParserPrinter {
-        
-        public init(){}
-        
+
+        public init() {}
+
         public var body: some URLRouting.Router<Newsletter.Route> {
             OneOf {
                 URLRouting.Route(.case(Newsletter.Route.api)) {
-                    API.Router()
+                    Newsletter.Route.API.Router()
                 }
                 URLRouting.Route(.case(Newsletter.Route.view)) {
-                    View.Router()
+                    Newsletter.Route.View.Router()
                 }
             }
         }

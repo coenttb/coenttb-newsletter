@@ -11,14 +11,13 @@ import DependenciesMacros
 extension Newsletter {
     @DependencyClient
     public struct Client: @unchecked Sendable {
-        
+
         public var subscribe: Newsletter.Client.Subscribe
 
         @DependencyEndpoint
         public var unsubscribe: (EmailAddress) async throws -> Void
     }
 }
-
 
 extension Newsletter.Client: TestDependencyKey {
     public static let testValue: Newsletter.Client = .testValue
@@ -33,7 +32,6 @@ extension Newsletter.Client {
         public var verify: (_ token: String, _ email: EmailAddress) async throws -> Void
     }
 }
-
 
 extension Newsletter.Client.Subscribe: TestDependencyKey {
     public static var testValue: Self {
