@@ -105,7 +105,7 @@ public struct NewsletterSubscriptionForm: HTML {
                     ) {
                         "\(String.subscribe.capitalizingFirstLetter())"
                     }
-                        .color(.text.secondary)
+                        .color(.text.button)
                         .display(.inlineBlock)
                 }
                 .flexContainer(
