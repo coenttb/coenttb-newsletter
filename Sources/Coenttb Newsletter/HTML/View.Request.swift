@@ -6,6 +6,7 @@
 //
 
 import Coenttb_Web
+import CoenttbHTML
 
 extension Newsletter.Route.View.Subscribe {
     public struct Request: HTML {
@@ -64,6 +65,8 @@ public struct NewsletterSubscriptionForm: HTML {
     let form_id: String
     let subscribeAction: URL
 
+    @Dependency(\.newsletter.buttonStyle) var buttonStyle
+    
     public init(
         form_id: String = UUID().uuidString,
         subscribeAction: URL
@@ -96,20 +99,21 @@ public struct NewsletterSubscriptionForm: HTML {
                     )
                 )
                 div {
-                    Button(
-                        type: .submit
+                    CoenttbHTML.Button(
+                        button: .init(type: .submit),
+                        style: .primary
                     ) {
                         "\(String.subscribe.capitalizingFirstLetter())"
                     }
-                    .color(.text.secondary)
-                    .display(.inlineBlock)
+                        .color(.text.secondary)
+                        .display(.inlineBlock)
                 }
                 .flexContainer(
                     justification: .center,
                     itemAlignment: .center,
                     media: .desktop
                 )
-
+                
                 div {}
                     .id("\(form_id)-message")
             }

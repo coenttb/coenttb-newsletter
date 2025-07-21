@@ -9,6 +9,7 @@ import Dependencies
 import DependenciesMacros
 import Foundation
 import RateLimiter
+import CoenttbHTML
 
 extension Newsletter {
     public struct Configuration: Sendable {
@@ -24,6 +25,7 @@ extension Newsletter {
         public var verificationRedirectURL: @Sendable () -> URL
         public var verificationTimeout: @Sendable () -> TimeInterval
         public var localStorageKey: @Sendable () -> String
+        public var buttonStyle: @Sendable (any HTML) -> any HTML
         public var emailLimiter: RateLimiter<RateLimitKey>
         public var ipLimiter: RateLimiter<RateLimitKey>
 
@@ -41,7 +43,8 @@ extension Newsletter {
             verificationRedirectURL: @Sendable @escaping () -> URL,
             verificationTimeout: @Sendable @escaping () -> TimeInterval = { 24 * 60 * 60 },
             emailLimiter: RateLimiter<RateLimitKey> = .emailLimiter,
-            ipLimiter: RateLimiter<RateLimitKey> = .ipLimiter
+            ipLimiter: RateLimiter<RateLimitKey> = .ipLimiter,
+            buttonStyle: @Sendable @escaping (any HTML) -> any HTML = { $0 }
         ) {
             self.cookieId = cookieId
             self.saveToLocalstorage = saveToLocalstorage
@@ -57,6 +60,7 @@ extension Newsletter {
             self.localStorageKey = localStorageKey
             self.emailLimiter = emailLimiter
             self.ipLimiter = ipLimiter
+            self.buttonStyle = buttonStyle
         }
     }
 }
@@ -93,15 +97,3 @@ private enum RateLimitKey: Hashable, Sendable {
     case ip(String)
 }
 
-extension Newsletter: TestDependencyKey {
-    public static let testValue: Newsletter = {
-        fatalError()
-    }()
-}
-
-extension DependencyValues {
-    public var newsletter: Newsletter {
-        get { self[Newsletter.self] }
-        set { self[Newsletter.self] = newValue }
-    }
-}

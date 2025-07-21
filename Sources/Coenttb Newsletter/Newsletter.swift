@@ -31,3 +31,16 @@ public struct Newsletter: Sendable {
         self.configuration[keyPath: keyPath]
     }
 }
+
+extension Newsletter: TestDependencyKey {
+    public static let testValue: Newsletter = {
+        fatalError()
+    }()
+}
+
+extension DependencyValues {
+    public var newsletter: Newsletter {
+        get { self[Newsletter.self] }
+        set { self[Newsletter.self] = newValue }
+    }
+}
