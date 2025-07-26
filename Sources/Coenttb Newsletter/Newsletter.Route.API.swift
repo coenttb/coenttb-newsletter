@@ -29,7 +29,7 @@ extension Newsletter.Route.API {
                 URLRouting.Route(.case(Newsletter.Route.API.unsubscribe)) {
                     Method.get
                     Path { "unsubscribe" }
-                    Body(.form(Newsletter.Route.API.Unsubscribe.self, decoder: .default))
+                    Body(.form(Newsletter.Route.API.Unsubscribe.self, decoder: .newsletter))
                 }
             }
         }
@@ -75,7 +75,7 @@ extension Newsletter.Route.API.Subscribe {
                 URLRouting.Route(.case(Newsletter.Route.API.Subscribe.request)) {
                     Method.post
                     Path { "request" }
-                    Body(.form(Request.self, decoder: .default))
+                    Body(.form(Request.self, decoder: .newsletter))
                 }
                 URLRouting.Route(.case(Newsletter.Route.API.Subscribe.verify)) {
                     Method.post
@@ -93,10 +93,3 @@ extension Newsletter.Route.API.Subscribe {
     }
 }
 
-extension UrlFormDecoder {
-    fileprivate static var `default`: UrlFormDecoder {
-        let decoder = UrlFormDecoder()
-        decoder.parsingStrategy = .bracketsWithIndices
-        return decoder
-    }
-}
