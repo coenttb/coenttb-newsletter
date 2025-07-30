@@ -7,7 +7,7 @@
 
 import Coenttb_Newsletter
 import Coenttb_Newsletter_Live
-import Coenttb_Web_Utils
+import EmailAddress
 import Dependencies
 
 @preconcurrency import Fluent
@@ -45,11 +45,11 @@ public final class Newsletter: Model, @unchecked Sendable {
         self.id = id
         self.lastEmailMessageId = lastEmailMessageId
         do {
-            if try Bool.isValidEmail(email) {
+            if (try? EmailAddress(email)) != nil {
                 self.email = email
                 self.emailVerificationStatus = emailVerificationStatus
             } else {
-                throw EmailValidationError.invalidEmailFormat
+                throw EmailAddress.EmailAddressError.invalidFormat(description: "Invalid email-format for: \(email)")
             }
         } catch {
             throw error

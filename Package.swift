@@ -23,7 +23,7 @@ extension Target.Dependency {
     static var mailgun: Self { .product(name: "Mailgun", package: "coenttb-mailgun") }
     static var dependenciesMacros: Self { .product(name: "DependenciesMacros", package: "swift-dependencies") }
     static var dependenciesTestSupport: Self { .product(name: "DependenciesTestSupport", package: "swift-dependencies") }
-    static var rateLimiter: Self { .product(name: "RateLimiter", package: "coenttb-utils") }
+    static var rateLimiter: Self { .product(name: "RateLimiter", package: "swift-ratelimiter") }
 }
 
 let package = Package(
@@ -42,7 +42,7 @@ let package = Package(
         .package(url: "https://github.com/coenttb/coenttb-server.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-server-vapor.git", branch: "main"),
         .package(url: "https://github.com/coenttb/coenttb-mailgun.git", branch: "main"),
-        .package(url: "https://github.com/coenttb/coenttb-utils.git", branch: "main"),
+        .package(url: "https://github.com/coenttb/swift-ratelimiter.git", from: "0.0.1"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies.git", from: "1.0.0")
     ],
     targets: [
