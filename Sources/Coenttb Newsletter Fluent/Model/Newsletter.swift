@@ -99,36 +99,36 @@ extension Newsletter {
 }
 
 extension Newsletter {
-    public enum Migration {
-        public struct Create: AsyncMigration {
+    package enum Migration {
+        package struct Create: AsyncMigration {
 
-            public var name: String = "Coenttb_Newsletter.CreateNewsletter"
+            package var name: String = "Coenttb_Newsletter.CreateNewsletter"
 
-            public init() {}
+            package init() {}
 
-            public func prepare(on database: Database) async throws {
+            package func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
                     .id()
-                    .field(Newsletter.FieldKeys.email, .string, .required)
-                    .field(Newsletter.FieldKeys.createdAt, .datetime)
-                    .unique(on: Newsletter.FieldKeys.email)
+                    .field("email", .string, .required)
+                    .field("created_at", .datetime)
+                    .unique(on: "email")
                     .create()
             }
 
-            public func revert(on database: Database) async throws {
+            package func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema).delete()
             }
         }
 
-        public struct STEP_1_AddUpdatedAt: AsyncMigration {
+        package struct STEP_1_AddUpdatedAt: AsyncMigration {
 
-            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
+            package var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
 
-            public init() {}
+            package init() {}
 
-            public func prepare(on database: Database) async throws {
+            package func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .field(Newsletter.FieldKeys.updatedAt, .datetime, .required)
+                    .field("updated_at", .datetime, .required)
                     .update()
 
                 try await Newsletter.query(on: database)
@@ -136,22 +136,22 @@ extension Newsletter {
                     .update()
             }
 
-            public func revert(on database: Database) async throws {
+            package func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .deleteField(Newsletter.FieldKeys.updatedAt)
+                    .deleteField("updated_at")
                     .update()
             }
         }
 
-        public struct STEP_2_AddEmailVerification: AsyncMigration {
+        package struct STEP_2_AddEmailVerification: AsyncMigration {
 
-            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
+            package var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
 
-            public init() {}
+            package init() {}
 
-            public func prepare(on database: Database) async throws {
+            package func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .field(FieldKeys.emailVerificationStatus, .string, .required)
+                    .field("email_verification_status", .string, .required)
                     .update()
 
                 try await Newsletter.query(on: database)
@@ -159,30 +159,62 @@ extension Newsletter {
                     .update()
             }
 
-            public func revert(on database: Database) async throws {
+            package func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .deleteField(FieldKeys.emailVerificationStatus)
+                    .deleteField("email_verification_status")
                     .update()
             }
         }
 
-        public struct STEP_3_AddLastEmailMessageId: AsyncMigration {
+        package struct STEP_3_AddLastEmailMessageId: AsyncMigration {
 
-            public var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
+            package var name: String = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddLastEmailMessageId"
 
-            public init() {}
+            package init() {}
 
-            public func prepare(on database: Database) async throws {
+            package func prepare(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .field(FieldKeys.lastEmailMessageId, .string)
+                    .field("last_email_message_id", .string)
                     .update()
             }
 
-            public func revert(on database: Database) async throws {
+            package func revert(on database: Database) async throws {
                 try await database.schema(Newsletter.schema)
-                    .deleteField(FieldKeys.lastEmailMessageId)
+                    .deleteField("last_email_message_id")
                     .update()
             }
         }
+    }
+}
+
+extension Coenttb_Newsletter_Fluent.Newsletter.Migration {
+    public static var allCases: [any Fluent.Migration] {
+        [
+            {
+                var migration = Newsletter.Migration.Create()
+                migration.name = "Coenttb_Newsletter.Newsletter.Migration.Create"
+                return migration
+            }(),
+            {
+                var migration = Coenttb_Newsletter_Fluent.Newsletter.Token.Migration.Create()
+                migration.name = "Coenttb_Newsletter.Newsletter.Token.Migration.Create"
+                return migration
+            }(),
+            {
+                var migration = Coenttb_Newsletter_Fluent.Newsletter.Migration.STEP_1_AddUpdatedAt()
+                migration.name = "Coenttb_Newsletter.Newsletter.Migration.STEP_1_AddUpdatedAt"
+                return migration
+            }(),
+            {
+                var migration = Coenttb_Newsletter_Fluent.Newsletter.Migration.STEP_2_AddEmailVerification()
+                migration.name = "Coenttb_Newsletter.Newsletter.Migration.STEP_2_AddEmailVerification"
+                return migration
+            }(),
+            {
+                var migration = Coenttb_Newsletter_Fluent.Newsletter.Migration.STEP_3_AddLastEmailMessageId()
+                migration.name = "Coenttb_Newsletter.Newsletter.Migration.STEP_3_AddLastEmailMessageId"
+                return migration
+            }()
+        ]
     }
 }
