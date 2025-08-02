@@ -99,7 +99,7 @@ extension Newsletter {
 }
 
 extension Newsletter {
-    package enum Migration {
+    public enum Migration {
         package struct Create: AsyncMigration {
 
             package var name: String = "Coenttb_Newsletter.CreateNewsletter"
