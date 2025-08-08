@@ -12,11 +12,10 @@ import Coenttb_Newsletter_Live
 import Coenttb_Vapor
 import Coenttb_Web
 import Mailgun
-import Messages
 
 extension Coenttb_Newsletter.Newsletter.Client {
     public static func live(
-        sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Messages.Send.Response,
+        sendVerificationEmail: @escaping @Sendable (_ email: EmailAddress, _ token: String) async throws -> Mailgun.Messages.Send.Response,
         onSuccessfullyVerified: @escaping @Sendable (_ email: EmailAddress) async throws -> Void,
         onUnsubscribed: @escaping @Sendable (_ email: EmailAddress) async throws -> Void
     ) -> Self {
@@ -154,7 +153,7 @@ extension Coenttb_Newsletter.Newsletter.Client {
     }
 }
 
-public enum ValidationError: Error {
+public enum ValidationError: Swift.Error {
     case invalidInput(String)
     case invalidToken
     case invalidVerificationStatus(String)

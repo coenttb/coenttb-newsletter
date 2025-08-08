@@ -1,27 +1,28 @@
-# coenttb-syndication
+# coenttb-newsletter
 
-`coenttb-syndication`
+`coenttb-newsletter`
 
+<img src="https://img.shields.io/badge/License-AGPL--3.0%20|%20Commercial-blue.svg" alt="License">
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
 This package is currently in active development and is subject to frequent changes. Features and APIs may change without prior notice until a stable release is available.
 
 ## Installation
 
-You can add `coenttb-syndication` to an Xcode project by including it as a package dependency:
+You can add `coenttb-newsletter` to an Xcode project by including it as a package dependency:
 
-Repository URL: https://github.com/coenttb/coenttb-syndication
+Repository URL: https://github.com/coenttb/coenttb-newsletter
 
 For a Swift Package Manager project, add the dependency in your Package.swift file:
 ```
 dependencies: [
-  .package(url: "https://github.com/coenttb/coenttb-syndication", branch: "main")
+  .package(url: "https://github.com/coenttb/coenttb-newsletter", branch: "main")
 ]
 ```
 
 ## Example
 
-Refer to [coenttb/coenttb-com-server](https://www.github.com/coenttb/coenttb-com-server) for an example of how to use coenttb-syndication.
+Refer to [coenttb/coenttb-com-server](https://www.github.com/coenttb/coenttb-com-server) for an example of how to use coenttb-newsletter.
 
 ## Related Projects
 
@@ -47,12 +48,12 @@ Got thoughts? Found something you love? Something you hate? Let me know! Your fe
 
 ## License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  
-You are free to use, modify, and distribute this project under the terms of the AGPL-3.0.  
-For full details, please refer to the [LICENSE](LICENSE) file.
+This project is available under **dual licensing**:
 
-### Commercial Licensing
+### Open Source License
+**GNU Affero General Public License v3.0 (AGPL-3.0)**  
+Free for open source projects. See [LICENSE](LICENSE.md) for details.
 
-A **Commercial License** is available for organizations or individuals who wish to use this project without adhering to the terms of the AGPL-3.0 (e.g., to use it in proprietary software or SaaS products).  
-
-For inquiries about commercial licensing, please contact **info@coenttb.com**.
+### Commercial License
+For proprietary/commercial use without AGPL restrictions.  
+Contact **info@coenttb.com** for licensing options.

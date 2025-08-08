@@ -8,7 +8,6 @@
 import Coenttb_Web
 import Foundation
 import Mailgun
-import Messages
 
 extension Email {
     public static func requestEmailVerification(

@@ -11,7 +11,7 @@ import URLFormCoding
 extension URLFormCoding.Form.Decoder {
     public static var newsletter: URLFormCoding.Form.Decoder {
         let decoder = URLFormCoding.Form.Decoder()
-        decoder.parsingStrategy = .bracketsWithIndices
+        decoder.arrayParsingStrategy = .bracketsWithIndices
         return decoder
     }
 }
